@@ -9,79 +9,98 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="Filaments">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
 
-    <Grid Margin="24" RowDefinitions="Auto * Auto">
 
-		<TextBlock Grid.Row="0" Text="Filaments " FontSize="24" FontWeight="Bold" Margin="0 0 0 16"/>
-		<DataGrid Grid.Row="1"
-			ItemsSource="{Binding Filaments}"
-			AutoGenerateColumns="False"
-            IsReadOnly="True"
-            GridLinesVisibility="All">
-			<DataGrid.Columns>
-				<DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
-				<DataGridTextColumn Header="Vendor" Binding="{Binding Vendor.Name}"/>
-				<DataGridTextColumn Header="Material" Binding="{Binding Material.Name}"/>
+	<DockPanel>
+        <Menu DockPanel.Dock="Top">
+			<MenuItem Header="_File">
+				<MenuItem Header="_Open"/>
+				<MenuItem Header="_Save"/>
+				<MenuItem Header="_Exit"/>
+            </MenuItem>
+			<MenuItem Header="_Edit">
+				<MenuItem Header="_Add Filament"/>
+				<MenuItem Header="_Edit Filament"/>
+				<MenuItem Header="_Delete Filament"/>
+            </MenuItem>
+			<MenuItem Header="_Settings"/>
+			<MenuItem Header="_Help">
+				<MenuItem Header="_About"/>
+            </MenuItem>
+        </Menu>
 
-                <DataGridTemplateColumn Header="Color" SortMemberPath="ColorName">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8">
-                                <Ellipse Fill="{Binding ColorHex}" Width="20" Height="20" Margin="0 0 8 0"/>
-								<TextBlock Text="{Binding ColorName}"/>
-                            </StackPanel>
-                        </DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+		<Grid Margin="24" RowDefinitions="Auto * Auto">
 
-                <DataGridTemplateColumn Header="Secondary Color" SortMemberPath="Color2Name">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8">
-                                <Ellipse Fill="{Binding Color2Hex}" Width="20" Height="20" Margin="0 0 8 0"/>
-								<TextBlock Text="{Binding Color2Name}"/>
-                            </StackPanel>
-                        </DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+			<TextBlock Grid.Row="0" Text="Filaments " FontSize="24" FontWeight="Bold" Margin="0 0 0 16"/>
+			<DataGrid Grid.Row="1"
+				ItemsSource="{Binding Filaments}"
+				AutoGenerateColumns="False"
+				IsReadOnly="True"
+				GridLinesVisibility="All">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
+					<DataGridTextColumn Header="Vendor" Binding="{Binding Vendor.Name}"/>
+					<DataGridTextColumn Header="Material" Binding="{Binding Material.Name}"/>
 
-                <DataGridTextColumn Header="Weight [g]" Binding="{Binding WeightLeft}"/>
-                <DataGridTextColumn Header="Spool Weight [g]" Binding="{Binding Spool.Weight}" />
-                <DataGridTextColumn Header="Measured Weight [g]" Binding="{Binding Weight}"/>
+					<DataGridTemplateColumn Header="Color" SortMemberPath="ColorName">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8">
+									<Ellipse Fill="{Binding ColorHex}" Width="20" Height="20" Margin="0 0 8 0"/>
+									<TextBlock Text="{Binding ColorName}"/>
+								</StackPanel>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="Price [EUR]" Binding="{Binding Price}"/>
+					<DataGridTemplateColumn Header="Secondary Color" SortMemberPath="Color2Name">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8">
+									<Ellipse Fill="{Binding Color2Hex}" Width="20" Height="20" Margin="0 0 8 0"/>
+									<TextBlock Text="{Binding Color2Name}"/>
+								</StackPanel>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Temperature [C]" SortMemberPath="TempMin">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-								<TextBlock Text="{Binding TempMin}"/>
-								<TextBlock Text="{Binding TempSecondValue}"/>
-                            </StackPanel>
-                        </DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+					<DataGridTextColumn Header="Weight [g]" Binding="{Binding WeightLeft}"/>
+					<DataGridTextColumn Header="Spool Weight [g]" Binding="{Binding Spool.Weight}" />
+					<DataGridTextColumn Header="Measured Weight [g]" Binding="{Binding Weight}"/>
 
-                <DataGridTemplateColumn Header="Bed Temperature [C]" SortMemberPath="TempBedMin">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-								<TextBlock Text="{Binding TempBedMin}"/>
-								<TextBlock Text="{Binding TempBedSecondValue}"/>
-                            </StackPanel>
-                        </DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+					<DataGridTextColumn Header="Price [EUR]" Binding="{Binding Price}"/>
 
-			</DataGrid.Columns>
-		</DataGrid>
-    </Grid>
+					<DataGridTemplateColumn Header="Temperature [C]" SortMemberPath="TempMin">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+									<TextBlock Text="{Binding TempMin}"/>
+									<TextBlock Text="{Binding TempSecondValue}"/>
+								</StackPanel>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
 
+					<DataGridTemplateColumn Header="Bed Temperature [C]" SortMemberPath="TempBedMin">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+									<TextBlock Text="{Binding TempBedMin}"/>
+									<TextBlock Text="{Binding TempBedSecondValue}"/>
+								</StackPanel>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+
+				</DataGrid.Columns>
+			</DataGrid>
+		</Grid>
+	</DockPanel>
 
 
 </Window>

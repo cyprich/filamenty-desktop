@@ -28,14 +28,13 @@
 				<MenuItem Header="_Edit Filament"/>
 				<MenuItem Header="_Delete Filament"/>
             </MenuItem>
-			<MenuItem Header="_Settings"/>
+			<MenuItem Header="_Settings" Click="HandleSettingsWindow"/>
 			<MenuItem Header="_Help">
 				<MenuItem Header="_About"/>
             </MenuItem>
         </Menu>
 
 		<Grid Margin="24" RowDefinitions="Auto * Auto">
-
 			<TextBlock Grid.Row="0" Text="Filaments " FontSize="24" FontWeight="Bold" Margin="0 0 0 16"/>
 			<DataGrid Grid.Row="1"
 				ItemsSource="{Binding Filaments}"

@@ -14,5 +14,11 @@ namespace Filaments.AvaloniaApp.Views
             InitializeComponent();
             DataContext = new MainWindowViewModel();
         }
+
+        private void HandleSettingsWindow(object? sender, RoutedEventArgs e)
+        {
+            var window = new SettingsWindow();
+            window.ShowDialog(this);
+        }
     }
 }

@@ -41,17 +41,17 @@ namespace Filaments.CommonLibrary
                     .Select(line => line.Split("="))
                     .ToDictionary(part => part[0], part => part[1]);
 
-                if (!(
-                        config.ContainsKey("host") &&
-                        config.ContainsKey("username") &&
-                        config.ContainsKey("password") &&
-                        config.ContainsKey("database") &&
-                        config.ContainsKey("port")
-                ))
-                {
-                    throw new InvalidDataException("Configuration file does not contain one of required fields " +
-                        "(host, port, username, password, database)");
-                }
+                //if (!(
+                //        config.ContainsKey("host") &&
+                //        config.ContainsKey("username") &&
+                //        config.ContainsKey("password") &&
+                //        config.ContainsKey("database") &&
+                //        config.ContainsKey("port")
+                //))
+                //{
+                //    throw new InvalidDataException("Configuration file does not contain one of required fields " +
+                //        "(host, port, username, password, database)");
+                //}
 
                 ChangeCredentials(
                     config["host"],
@@ -92,7 +92,7 @@ namespace Filaments.CommonLibrary
             return result.ToArray();
         }
 
-        private Filament ParseFilament(NpgsqlDataReader reader)
+        private static Filament ParseFilament(NpgsqlDataReader reader)
         {
             // columns that can be null
             string? color2Hex = reader.IsDBNull(reader.GetOrdinal("color2_hex"))

@@ -7,7 +7,7 @@
         x:Class="Filaments.AvaloniaApp.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Filaments.AvaloniaApp">
+        Title="Filaments">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -15,6 +15,23 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Grid Margin="24" RowDefinitions="Auto * Auto">
+
+		<TextBlock Grid.Row="0" Text="Filaments " FontSize="20" FontWeight="Bold" Margin="0 0 0 16"/>
+		<DataGrid Grid.Row="1"
+			ItemsSource="{Binding Filaments}"
+			AutoGenerateColumns="False"
+            IsReadOnly="True"
+            GridLinesVisibility="All">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
+				<DataGridTextColumn Header="Vendor" Binding="{Binding Vendor.Name}"/>
+				<DataGridTextColumn Header="Material" Binding="{Binding Material.Name}"/>
+                <DataGridTemplateColumn ></DataGridTemplateColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+    </Grid>
+
+
 
 </Window>

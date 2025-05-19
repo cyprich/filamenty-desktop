@@ -1,4 +1,9 @@
+using System;
+using System.IO;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Filaments.AvaloniaApp.ViewModels;
+using Filaments.CommonLibrary;
 
 namespace Filaments.AvaloniaApp.Views
 {
@@ -7,6 +12,7 @@ namespace Filaments.AvaloniaApp.Views
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
         }
     }
 }

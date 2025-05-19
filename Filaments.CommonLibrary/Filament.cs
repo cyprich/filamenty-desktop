@@ -165,6 +165,10 @@ namespace Filaments.CommonLibrary
             }
         }
 
+        public string TempSecondValue => TempMax != null ? $" - {TempMax}" : "";
+        public string TempBedSecondValue => TempBedMax != null ? $" - {TempBedMax}" : "";
+        public int WeightLeft => Math.Max(Weight - Spool.Weight, 0);
+
         // private ? image
 
 
@@ -188,7 +192,7 @@ namespace Filaments.CommonLibrary
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

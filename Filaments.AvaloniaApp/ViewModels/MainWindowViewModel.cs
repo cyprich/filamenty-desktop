@@ -16,7 +16,6 @@ namespace Filaments.AvaloniaApp.ViewModels
             LoadFilamentsAsync();
         }
 
-
         private async void LoadFilamentsAsync()
         {
             var dbHandler = new DatabaseHandler();

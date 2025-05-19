@@ -10,14 +10,15 @@ namespace Filaments.CommonLibrary
 {
     public class Filament : INotifyPropertyChanged
     {
-        private int _idFilament;
-        public int IdFilament
+
+        private int _id;
+        public int Id
         {
-            get => _idFilament;
+            get => _id;
             set
             {
-                _idFilament = value;
-                OnPropertyChanged(nameof(IdFilament));
+                _id = value;
+                OnPropertyChanged(nameof(Id));
             }
         }
 
@@ -43,7 +44,7 @@ namespace Filaments.CommonLibrary
             }
         }
 
-        private Spool _spool;
+        private Spool _spool = new();
         public Spool Spool
         {
             get => _spool;
@@ -167,9 +168,9 @@ namespace Filaments.CommonLibrary
         // private ? image
 
 
-        public Filament(int idFilament, Vendor vendor, Material material, Spool spool, float price, string colorHex, string colorName, string? color2Hex, string? color2Name, int tempMin, int? tempMax, int tempBedMin, int? tempBedMax, int weight)
+        public Filament(int id, Vendor vendor, Material material, Spool spool, float price, string colorHex, string colorName, string? color2Hex, string? color2Name, int tempMin, int? tempMax, int tempBedMin, int? tempBedMax, int weight)
         {
-            IdFilament = idFilament;
+            Id = id;
             Vendor = vendor;
             Material = material;
             Spool = spool;
@@ -199,5 +200,30 @@ namespace Filaments.CommonLibrary
         //    OnPropertyChanged(propertyName);
         //    return true;
         //}
+
+        public override string ToString()
+        {
+            var result = $"Filament #{Id}, ";
+            result += $"By {Vendor.Name}, ";
+            result += $"Material {Material.Name}, ";
+            result += $"{Price} EUR, ";
+            result += $"Color {ColorName} ({ColorHex}), ";
+            result += !string.IsNullOrEmpty(Color2Name)
+                ? $"Secondary Color {Color2Name} ({Color2Hex}), "
+                : "";
+            result += $"Temperature {TempMin}" + 
+            (TempMax != null 
+                ? $"-{TempMax}"
+                : "") +
+            "°C, ";
+            result += $"Bed Temperature {TempBedMin}" + 
+            (TempBedMax != null 
+                ? $"-{TempBedMax}"
+                : "") +
+            "°C, ";
+            result += $"Weight {Weight}g";
+
+            return result;
+        }
     }
 }

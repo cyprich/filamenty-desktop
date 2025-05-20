@@ -6,22 +6,38 @@ using System.Threading.Tasks;
 
 namespace Filaments.CommonLibrary
 {
-    public static class Credentials
+    public static class Configuration
     {
         public static string Host { get; set; } = "";
         public static string Port { get; set; } = "";
         public static string Username { get; set; } = "";
         public static string Password { get; set; } = "";
         public static string Database { get; set; } = "";
+        public static IDatabaseProvider? Provider { get; set; }
         public static string[] RequiredFields => ["host", "port", "username", "password", "database"];
 
-        public static bool Change(string host, string port, string username, string password, string database)
+        public static bool Change(string host, string port, string username, string password, string database, string? provider = "")
         {
             Host = host;
             Port = port;
             Username = username;
             Password = password;
             Database = database;
+
+            if (!string.IsNullOrEmpty(provider))
+            {
+                switch (provider?.ToLower())
+                {
+                    case "postgre":
+                    case "postgres":
+                    case "postgresql":
+                        Provider = new PostgresDatabaseProvider();
+                        break;
+                    case "sqlite":
+                        Provider = new SqliteDatabaseProvider();
+                        break;
+                }
+            }
 
             return true;
         }

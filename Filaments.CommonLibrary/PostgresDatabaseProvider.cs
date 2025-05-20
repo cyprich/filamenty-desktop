@@ -15,9 +15,9 @@ namespace Filaments.CommonLibrary
 
         private void UpdateConnString()
         {
-            ConnString = $"Host={Credentials.Host};Port={Credentials.Port};" +
-                         $"Username={Credentials.Username};Password={Credentials.Password};" +
-                         $"Database={Credentials.Database}";
+            ConnString = $"Host={Configuration.Host};Port={Configuration.Port};" +
+                         $"Username={Configuration.Username};Password={Configuration.Password};" +
+                         $"Database={Configuration.Database}";
         }
 
 

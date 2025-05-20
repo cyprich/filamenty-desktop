@@ -10,6 +10,9 @@
     <Grid Margin="16"
         ColumnDefinitions="Auto  *" 
         RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto * Auto">
+
+        <ItemsControl></ItemsControl>
+
         <TextBlock Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="2"
 			Text="Database Settings" FontSize="20" FontWeight="Bold" Margin="0 0 0 8"/>
 

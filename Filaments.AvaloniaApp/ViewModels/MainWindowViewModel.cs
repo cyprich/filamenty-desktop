@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Filaments.CommonLibrary;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 namespace Filaments.AvaloniaApp.ViewModels
 {
@@ -12,17 +15,19 @@ namespace Filaments.AvaloniaApp.ViewModels
 
         public MainWindowViewModel()
         {
-            Filaments = new ObservableCollection<Filament>();
+            Filaments = [];
             LoadFilamentsAsync();
         }
 
         private async void LoadFilamentsAsync()
         {
-            var dbHandler = new DatabaseHandler();
-            dbHandler.LoadCredentials(new FileInfo(".env"));
-            var result = await Task.Run(() => dbHandler.GetFilaments());
+            Credentials.Change(new FileInfo(".env"));
+            DatabaseHandler.Provider = new PostgresDatabaseProvider();
+            var filaments = await DatabaseHandler.GetFilaments();
 
-            foreach (var f in result)
+            //var filaments = await Task.Run(() => dbHandler.GetFilaments());
+
+            foreach (var f in filaments)
             {
                 Filaments.Add(f);
             }

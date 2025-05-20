@@ -72,7 +72,7 @@
 					<DataGridTextColumn Header="Spool Weight [g]" Binding="{Binding Spool.Weight}" />
 					<DataGridTextColumn Header="Measured Weight [g]" Binding="{Binding Weight}"/>
 
-					<DataGridTextColumn Header="Price [EUR]" Binding="{Binding Price}"/>
+					<DataGridTextColumn Header="Price [EUR]" Binding="{Binding PriceFormatted}"/>
 
 					<DataGridTemplateColumn Header="Temperature [C]" SortMemberPath="TempMin">
 						<DataGridTemplateColumn.CellTemplate>

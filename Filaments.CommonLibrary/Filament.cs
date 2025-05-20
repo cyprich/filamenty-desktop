@@ -169,6 +169,8 @@ namespace Filaments.CommonLibrary
         public string TempBedSecondValue => TempBedMax != null ? $" - {TempBedMax}" : "";
         public int WeightLeft => Math.Max(Weight - Spool.Weight, 0);
 
+        public string PriceFormatted => $"{Price:F2}";
+
         // private ? image
 
 

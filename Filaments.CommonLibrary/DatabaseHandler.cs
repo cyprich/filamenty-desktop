@@ -4,16 +4,14 @@ namespace Filaments.CommonLibrary
 {
     public static class DatabaseHandler
     {
-        public static IDatabaseProvider? Provider { get; set; }
-
         public static async Task<Filament[]> GetFilaments()
         {
-            if (Provider == null)
+            if (Configuration.Provider == null)
             {
                 throw new InvalidOperationException("Database provider is not set.");
             }
 
-            var filaments = await Provider.GetFilaments();
+            var filaments = await Configuration.Provider.GetFilaments();
             return filaments;
         }
 

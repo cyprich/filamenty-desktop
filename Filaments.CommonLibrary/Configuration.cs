@@ -14,9 +14,21 @@ namespace Filaments.CommonLibrary
         public static string Password { get; set; } = "";
         public static string Database { get; set; } = "";
         public static IDatabaseProvider? Provider { get; set; }
-        public static string[] RequiredFields => ["host", "port", "username", "password", "database"];
+        public static string[] RequiredFields => ["host", "port", "username", "password", "database", "provider"];
 
-        public static bool Change(string host, string port, string username, string password, string database, string? provider = "")
+        public static bool Change(string host, string port, string username, string password, string database, IDatabaseProvider provider)
+        {
+            Host = host;
+            Port = port;
+            Username = username;
+            Password = password;
+            Database = database;
+            Provider = provider;
+
+            return true;
+        }
+
+        public static bool Change(string host, string port, string username, string password, string database, string provider)
         {
             Host = host;
             Port = port;
@@ -24,13 +36,9 @@ namespace Filaments.CommonLibrary
             Password = password;
             Database = database;
 
-            if (!string.IsNullOrEmpty(provider))
-            {
-                return ChangeProvider(provider);
-            }
-
-            return true;
+            return ChangeProvider(provider);
         }
+
 
         public static bool Change(Dictionary<string, string> configDictionary)
         {
@@ -43,7 +51,7 @@ namespace Filaments.CommonLibrary
             }
 
             var d = configDictionary;
-            return Change(d["host"], d["port"], d["username"], d["password"], d["database"], !string.IsNullOrEmpty(d["provider"]) ? d["provider"] : "");
+            return Change(d["host"], d["port"], d["username"], d["password"], d["database"], d["provider"]);
         }
 
         public static bool Change(FileInfo file)

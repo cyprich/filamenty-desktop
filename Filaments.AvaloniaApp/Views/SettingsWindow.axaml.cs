@@ -52,23 +52,26 @@ public partial class SettingsWindow : Window
             return;
         }
 
-        Configuration.Username = PostgresUsername.Text!;
-        Configuration.Password = PostgresPassword.Text!;
-        Configuration.Host = PostgresAddress.Text!;
-        Configuration.Port = PostgresPort.Text!;
-        Configuration.Database = PostgresName.Text!;
+        //Configuration.Username = PostgresUsername.Text!;
+        //Configuration.Password = PostgresPassword.Text!;
+        //Configuration.Host = PostgresAddress.Text!;
+        //Configuration.Port = PostgresPort.Text!;
+        //Configuration.Database = PostgresName.Text!;
 
         var selected = DatabaseComboBox.SelectedItem?.ToString()?.ToLower();
 
         switch (selected)
         {
             case "postgresql":
-                Configuration.Provider = new PostgresDatabaseProvider();
-                Configuration.Username = PostgresUsername.Text!;
-                Configuration.Password = PostgresPassword.Text!;
-                Configuration.Host = PostgresAddress.Text!;
-                Configuration.Port = PostgresPort.Text!;
-                Configuration.Database = PostgresName.Text!;
+                // NOTE - I used null suppression, because the values are validated in ValidateParameters() function
+                Configuration.Change(
+                    PostgresAddress.Text!,
+                    PostgresPort.Text!,
+                    PostgresUsername.Text!,
+                    PostgresPassword.Text!,
+                    PostgresName.Text!,
+                    new PostgresDatabaseProvider()
+                );
                 break;
             case "sqlite":
                 break;

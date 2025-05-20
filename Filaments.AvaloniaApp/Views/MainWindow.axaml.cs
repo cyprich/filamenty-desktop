@@ -33,7 +33,6 @@ namespace Filaments.AvaloniaApp.Views
                 if (result == ButtonResult.Yes)
                 {
                     Configuration.Change(new FileInfo(".env"));
-                    DatabaseHandler.Provider = new PostgresDatabaseProvider();
 
                     if (DataContext is MainWindowViewModel vm)
                     {
@@ -43,10 +42,16 @@ namespace Filaments.AvaloniaApp.Views
             }
         }
 
-        private void HandleSettingsWindow(object? sender, RoutedEventArgs e)
+        private async void HandleSettingsWindow(object? sender, RoutedEventArgs e)
         {
             var window = new SettingsWindow();
-            window.ShowDialog(this);
+            //window.ShowDialog(this);
+            var result = await window.ShowDialog<bool>(this);
+
+            if (result && DataContext is MainWindowViewModel vm)
+            {
+                _ = vm.LoadFilamentsAsync();
+            }
         }
     }
 }

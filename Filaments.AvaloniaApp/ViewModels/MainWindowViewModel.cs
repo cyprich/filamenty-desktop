@@ -21,8 +21,8 @@ namespace Filaments.AvaloniaApp.ViewModels
 
         public async Task LoadFilamentsAsync()
         {
+            Filaments.Clear();
             var filaments = await DatabaseHandler.GetFilaments();
-
             foreach (var f in filaments)
             {
                 Filaments.Add(f);

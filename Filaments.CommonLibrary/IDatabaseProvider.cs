@@ -8,6 +8,8 @@ namespace Filaments.CommonLibrary
 {
     public interface IDatabaseProvider
     {
+        public string Name { get; }
+
         public Task<Filament[]> GetFilaments();
 
         public Filament ParseFilament(object? reader);

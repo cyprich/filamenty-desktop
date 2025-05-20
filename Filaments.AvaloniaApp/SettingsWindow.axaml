@@ -7,41 +7,61 @@
         Title="Settings"
         Width="300"
         Height="450">
-    <Grid Margin="16"
-        ColumnDefinitions="Auto  *" 
-        RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto * Auto">
+	<DockPanel>
+		<Menu DockPanel.Dock="Top">
+			<MenuItem Header="_Save"/>
+			<MenuItem Header="_Load"/>
+			<MenuItem Header="_Reset"/>
+			<MenuItem Header="_Exit"/>
+		</Menu>
 
-        <ItemsControl></ItemsControl>
+		<Grid Margin="16"
+			ColumnDefinitions="Auto *"
+			RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto Auto * Auto">
 
-        <TextBlock Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="2"
-			Text="Database Settings" FontSize="20" FontWeight="Bold" Margin="0 0 0 8"/>
+			<ItemsControl></ItemsControl>
 
-		<TextBlock Grid.Row="1" Grid.Column="0" Text="Username" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="8 4"/>
+			<TextBlock Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="2"
+				Text="Settings" FontSize="20" FontWeight="Bold" Margin="0 0 0 8"/>
 
-		<TextBlock Grid.Row="2" Grid.Column="0" Text="Password" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="8 4"/>
+			<TextBlock Grid.Row="1" Grid.Column="0" Text="Database" FontWeight="Medium" VerticalAlignment="Center"/>
+			<ComboBox Grid.Row="1" Grid.Column="1"
+					  Margin="8" HorizontalAlignment="Stretch"
+					  x:Name="DatabaseComboBox"
+					  SelectionChanged="DatabaseComboBox_OnSelectionChanged">
+			</ComboBox>
 
-		<TextBlock Grid.Row="3" Grid.Column="0" Text="URL or address" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Margin="8 4"/>
+			<Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+				  ColumnDefinitions="Auto *"
+				  RowDefinitions="Auto Auto Auto Auto Auto"
+				  x:Name="PostgresGrid">
 
-		<TextBlock Grid.Row="4" Grid.Column="0" Text="Port" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Margin="8 4"/>
+				<TextBlock Grid.Row="0" Grid.Column="0" Text="Username" VerticalAlignment="Center"/>
+				<TextBox Grid.Row="0" Grid.Column="1" Margin="8 4"
+						 x:Name="PostgresUsername"/>
 
-		<TextBlock Grid.Row="5" Grid.Column="0" Text="Name" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="5" Grid.Column="1" Margin="8 4"/>
+				<TextBlock Grid.Row="1" Grid.Column="0" Text="Password" VerticalAlignment="Center"/>
+				<TextBox Grid.Row="1" Grid.Column="1" Margin="8 4" x:Name="PostgresPassword" PasswordChar="*"/>
 
-        <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-            <CheckBox/>
-            <TextBlock Text="Remember settings" VerticalAlignment="Center"/>
-        </StackPanel>
+				<TextBlock Grid.Row="2" Grid.Column="0" Text="IP address" VerticalAlignment="Center"/>
+				<TextBox Grid.Row="2" Grid.Column="1" Margin="8 4" x:Name="PostgresAddress"/>
 
-        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Content="Test connection" 
-                HorizontalAlignment="Center" Margin="0 8 0 0"/>
-        
-        <StackPanel Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Save" Margin="0 0 8 0"/>
-            <Button Content="Cancel"/>
-        </StackPanel>
-    </Grid>
+				<TextBlock Grid.Row="3" Grid.Column="0" Text="Port" VerticalAlignment="Center"/>
+				<TextBox Grid.Row="3" Grid.Column="1" Margin="8 4" x:Name="PostgresPort"/>
+
+				<TextBlock Grid.Row="4" Grid.Column="0" Text="DB Name" VerticalAlignment="Center"/>
+				<TextBox Grid.Row="4" Grid.Column="1" Margin="8 4" x:Name="PostgresName"/>
+
+			</Grid>
+
+			<Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SqliteGrid">
+
+			</Grid>
+
+			<StackPanel Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+				<Button Content="Save" Margin="0 0 8 0" Click="HandleSubmit"/>
+				<Button Content="Cancel" Click="HandleCancel"/>
+			</StackPanel>
+		</Grid>
+	</DockPanel>
 </Window>

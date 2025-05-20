@@ -9,6 +9,8 @@ namespace Filaments.CommonLibrary
 {
     public class PostgresDatabaseProvider : IDatabaseProvider
     {
+        public string Name { get; } = "PostgreSQL";
+
         public string ConnString { get; set; } = "";
 
         public PostgresDatabaseProvider() { }
@@ -19,6 +21,7 @@ namespace Filaments.CommonLibrary
                          $"Username={Configuration.Username};Password={Configuration.Password};" +
                          $"Database={Configuration.Database}";
         }
+
 
 
         public async Task<Filament[]> GetFilaments()

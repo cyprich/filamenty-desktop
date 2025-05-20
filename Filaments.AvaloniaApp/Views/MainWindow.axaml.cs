@@ -14,7 +14,6 @@ namespace Filaments.AvaloniaApp.Views
         public MainWindow()
         {
             InitializeComponent();
-            //DataContext = this;
             DataContext = new MainWindowViewModel();
 
             Opened += MainWindow_Opened;

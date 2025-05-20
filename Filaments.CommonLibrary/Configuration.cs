@@ -26,17 +26,7 @@ namespace Filaments.CommonLibrary
 
             if (!string.IsNullOrEmpty(provider))
             {
-                switch (provider?.ToLower())
-                {
-                    case "postgre":
-                    case "postgres":
-                    case "postgresql":
-                        Provider = new PostgresDatabaseProvider();
-                        break;
-                    case "sqlite":
-                        Provider = new SqliteDatabaseProvider();
-                        break;
-                }
+                return ChangeProvider(provider);
             }
 
             return true;
@@ -53,7 +43,7 @@ namespace Filaments.CommonLibrary
             }
 
             var d = configDictionary;
-            return Change(d["host"], d["port"], d["username"], d["password"], d["database"]);
+            return Change(d["host"], d["port"], d["username"], d["password"], d["database"], !string.IsNullOrEmpty(d["provider"]) ? d["provider"] : "");
         }
 
         public static bool Change(FileInfo file)
@@ -66,6 +56,23 @@ namespace Filaments.CommonLibrary
             return Change(File.ReadAllLines(file.FullName)
                 .Select(line => line.Split("="))
                 .ToDictionary(part => part[0], part => part[1]));
+        }
+
+        public static bool ChangeProvider(string provider)
+        {
+            switch (provider.ToLower())
+            {
+                case "postgre":
+                case "postgres":
+                case "postgresql":
+                    Provider = new PostgresDatabaseProvider();
+                    return true;
+                case "sqlite":
+                    Provider = new SqliteDatabaseProvider();
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }

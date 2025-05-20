@@ -8,6 +8,8 @@ namespace Filaments.CommonLibrary
 {
     public class SqliteDatabaseProvider : IDatabaseProvider
     {
+        public string Name { get; } = "Sqlite";
+
         public Task<Filament[]> GetFilaments()
         {
             throw new NotImplementedException();

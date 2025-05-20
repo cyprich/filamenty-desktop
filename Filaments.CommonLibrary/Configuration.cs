@@ -13,28 +13,31 @@ namespace Filaments.CommonLibrary
         public static string Username { get; set; } = "";
         public static string Password { get; set; } = "";
         public static string Database { get; set; } = "";
+        public static string Schema { get; set; } = "";
         public static IDatabaseProvider? Provider { get; set; }
         public static string[] RequiredFields => ["host", "port", "username", "password", "database", "provider"];
 
-        public static bool Change(string host, string port, string username, string password, string database, IDatabaseProvider provider)
+        public static bool Change(string host, string port, string username, string password, string database, string schema, IDatabaseProvider provider)
         {
             Host = host;
             Port = port;
             Username = username;
             Password = password;
             Database = database;
+            Schema = schema;
             Provider = provider;
 
             return true;
         }
 
-        public static bool Change(string host, string port, string username, string password, string database, string provider)
+        public static bool Change(string host, string port, string username, string password, string database, string schema, string provider)
         {
             Host = host;
             Port = port;
             Username = username;
             Password = password;
             Database = database;
+            Schema = schema;
 
             return ChangeProvider(provider);
         }
@@ -51,7 +54,11 @@ namespace Filaments.CommonLibrary
             }
 
             var d = configDictionary;
-            return Change(d["host"], d["port"], d["username"], d["password"], d["database"], d["provider"]);
+            return Change(d["host"], d["port"],
+                d["username"], d["password"],
+                d["database"], d["schema"],
+                d["provider"]
+            );
         }
 
         public static bool Change(FileInfo file)

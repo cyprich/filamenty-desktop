@@ -19,5 +19,10 @@ namespace Filaments.CommonLibrary
         {
             throw new NotImplementedException();
         }
+
+        public void Create()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

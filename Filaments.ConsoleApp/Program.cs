@@ -1,15 +1,9 @@
 ﻿using Filaments.CommonLibrary;
 
-DatabaseHandler dbhandler = new();
-//dbhandler.Change("192.168.88.3", "cyprich", "lepacapaska");
-if (!dbhandler.LoadCredentials(new FileInfo(".env")))
-{
-    return;
-}
+Configuration.Change(new FileInfo(".env"));
+var filaments = await DatabaseHandler.GetFilaments();
 
-var x = dbhandler.GetFilaments();
-
-foreach (var f in x.Result)
+foreach (var f in filaments)
 {
     Console.WriteLine(f);
 }

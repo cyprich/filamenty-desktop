@@ -22,8 +22,8 @@ namespace Filaments.CommonLibrary
             }
         }
 
-        private Vendor _vendor = new();
-        public Vendor Vendor
+        private string _vendor = "";
+        public string Vendor
         {
             get => _vendor;
             set
@@ -33,25 +33,14 @@ namespace Filaments.CommonLibrary
             }
         }
 
-        private Material _material = new();
-        public Material Material
+        private string _material = "";
+        public string Material
         {
             get => _material;
             set
             {
                 _material = value;
                 OnPropertyChanged(nameof(Material));
-            }
-        }
-
-        private Spool _spool = new();
-        public Spool Spool
-        {
-            get => _spool;
-            set
-            {
-                _spool = value;
-                OnPropertyChanged(nameof(Spool));
             }
         }
 
@@ -154,32 +143,54 @@ namespace Filaments.CommonLibrary
             }
         }
 
-        private int _weight;
-        public int Weight
+        private int _measuredWeight;
+        public int MeasuredWeight
         {
-            get => _weight;
+            get => _measuredWeight;
             set
             {
-                _weight = value;
-                OnPropertyChanged(nameof(Weight));
+                _measuredWeight = value;
+                OnPropertyChanged(nameof(MeasuredWeight));
+            }
+        }
+
+        private int _spoolWeight;
+
+        public int SpoolWeight
+        {
+            get => _spoolWeight;
+
+            set
+            {
+                _spoolWeight = value;
+                OnPropertyChanged(nameof(SpoolWeight));
+            }
+        }
+
+        private int _originalWeight;
+
+        public int OriginalWeight
+        {
+            get => _originalWeight;
+            set
+            {
+                _originalWeight = value;
+                OnPropertyChanged(nameof(OriginalWeight));
             }
         }
 
         public string TempSecondValue => TempMax != null ? $" - {TempMax}" : "";
         public string TempBedSecondValue => TempBedMax != null ? $" - {TempBedMax}" : "";
-        public int WeightLeft => Math.Max(Weight - Spool.Weight, 0);
-
+        public int WeightLeft => Math.Max(MeasuredWeight - SpoolWeight, 0);
         public string PriceFormatted => $"{Price:F2}";
+        public string CentsPerGram => $"{(Price / OriginalWeight * 100):F2}";
 
-        // private ? image
 
-
-        public Filament(int id, Vendor vendor, Material material, Spool spool, float price, string colorHex, string colorName, string? color2Hex, string? color2Name, int tempMin, int? tempMax, int tempBedMin, int? tempBedMax, int weight)
+        public Filament(int id, string vendor, string material, float price, string colorHex, string colorName, string? color2Hex, string? color2Name, int tempMin, int? tempMax, int tempBedMin, int? tempBedMax, int measuredWeight, int spoolWeight, int originalWeight)
         {
             Id = id;
             Vendor = vendor;
             Material = material;
-            Spool = spool;
             Price = price;
             ColorHex = colorHex;
             ColorName = colorName;
@@ -189,7 +200,9 @@ namespace Filaments.CommonLibrary
             TempMax = tempMax;
             TempBedMin = tempBedMin;
             TempBedMax = tempBedMax;
-            Weight = weight;
+            MeasuredWeight = measuredWeight;
+            SpoolWeight = spoolWeight;
+            OriginalWeight = originalWeight;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -210,8 +223,8 @@ namespace Filaments.CommonLibrary
         public override string ToString()
         {
             var result = $"Filament #{Id}, ";
-            result += $"By {Vendor.Name}, ";
-            result += $"Material {Material.Name}, ";
+            result += $"By {Vendor}, ";
+            result += $"Material {Material}, ";
             result += $"{Price} EUR, ";
             result += $"Color {ColorName} ({ColorHex}), ";
             result += !string.IsNullOrEmpty(Color2Name)
@@ -227,7 +240,7 @@ namespace Filaments.CommonLibrary
                 ? $"-{TempBedMax}"
                 : "") +
             "°C, ";
-            result += $"Weight {Weight}g";
+            result += $"Weight {MeasuredWeight}g";
 
             return result;
         }

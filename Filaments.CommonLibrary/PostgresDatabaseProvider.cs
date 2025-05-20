@@ -9,34 +9,48 @@ namespace Filaments.CommonLibrary
 {
     public class PostgresDatabaseProvider : IDatabaseProvider
     {
-        public string Name { get; } = "PostgreSQL";
+        public string Name => "PostgreSQL";
 
         public string ConnString { get; set; } = "";
 
-        public PostgresDatabaseProvider() { }
+        public NpgsqlDataSource? DataSource { get; private set; }
 
-        private void UpdateConnString()
+        private void Update()
         {
             ConnString = $"Host={Configuration.Host};Port={Configuration.Port};" +
                          $"Username={Configuration.Username};Password={Configuration.Password};" +
                          $"Database={Configuration.Database}";
+            DataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
         }
-
-
 
         public async Task<Filament[]> GetFilaments()
         {
             var result = new List<Filament>();
 
-            UpdateConnString();
-            var dataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
-            var conn = await dataSource.OpenConnectionAsync();
-            await using var cmd = new NpgsqlCommand("select * from f.full_view", conn);
-            await using var reader = await cmd.ExecuteReaderAsync();
-
-            while (await reader.ReadAsync())
+            Update();
+            if (DataSource != null)
             {
-                result.Add(ParseFilament(reader));
+                Console.WriteLine("Loading data from database...");
+
+                var conn = await DataSource.OpenConnectionAsync();
+                await using var cmd = new NpgsqlCommand($"select * from {Configuration.Schema}.filament;", conn);
+
+                NpgsqlDataReader? reader = null;
+                try
+                {
+                    reader = await cmd.ExecuteReaderAsync();
+                }
+                catch (NpgsqlException e)
+                {
+                    Console.WriteLine(e);
+                    Create();
+                    reader = await cmd.ExecuteReaderAsync();
+                }
+
+                while (await reader.ReadAsync())
+                {
+                    result.Add(ParseFilament(reader));
+                }
             }
 
             return result.ToArray();
@@ -53,7 +67,6 @@ namespace Filaments.CommonLibrary
             return ParseFilament(npgsqlReader);
         }
         // NOTE - End of AI-generated code
-
 
         private static Filament ParseFilament(NpgsqlDataReader reader)
         {
@@ -73,21 +86,9 @@ namespace Filaments.CommonLibrary
 
 
             return new Filament(
-                reader.GetInt32(reader.GetOrdinal("id_filament")),
-                new Vendor(
-                    reader.GetInt32(reader.GetOrdinal("id_vendor")),
-                    reader.GetString(reader.GetOrdinal("name_vendor"))
-                ),
-                new Material(
-                    reader.GetInt32(reader.GetOrdinal("id_material")),
-                    reader.GetString(reader.GetOrdinal("name_material"))
-                ),
-                new Spool(
-                    reader.GetInt32(reader.GetOrdinal("id_spool")),
-                    reader.GetString(reader.GetOrdinal("spool_material")),
-                    reader.GetInt32(reader.GetOrdinal("spool_weight")),
-                    reader.GetInt32(reader.GetOrdinal("capacity"))
-                ),
+                reader.GetInt32(reader.GetOrdinal("id")),
+                reader.GetString(reader.GetOrdinal("vendor")),
+                reader.GetString(reader.GetOrdinal("material")),
                 reader.GetFloat(reader.GetOrdinal("price")),
                 reader.GetString(reader.GetOrdinal("color_hex")),
                 reader.GetString(reader.GetOrdinal("color_name")),
@@ -97,7 +98,35 @@ namespace Filaments.CommonLibrary
                 tempMax,
                 reader.GetInt32(reader.GetOrdinal("temp_bed_min")),
                 tempBedMax,
-                reader.GetInt32(reader.GetOrdinal("weight"))
+                reader.GetInt32(reader.GetOrdinal("measured_weight")),
+                reader.GetInt32(reader.GetOrdinal("spool_weight")),
+                reader.GetInt32(reader.GetOrdinal("original_weight"))
+            );
+        }
+
+        public async void Create()
+        {
+            Update();
+            await using var command = DataSource?.CreateCommand(
+                $"drop schema if exists {Configuration.Schema};" +
+                $"create schema {Configuration.Schema}" +
+                $"create table {Configuration.Schema}.filament (" +
+                $"id serial primary key," +
+                $"vendor varchar(50) not null," +
+                $"material varchar(50) not null," +
+                $"price numeric(5, 2) not null," +
+                $"color_hex char(7) not null," +
+                $"color_name varchar(50) not null," +
+                $"color2_hex char(7)," +
+                $"color2_name varchar(50)," +
+                $"temp_min numeric(3, 0) not null," +
+                $"temp_max numeric(3, 0)," +
+                $"temp_bed_min numeric(3, 0) not null," +
+                $"temp_bed_max numeric(3, 0)," +
+                $"measured_weight numeric(5, 0)," +
+                $"spool_weight numeric(5, 0)," +
+                $"original_weight numeric(5, 0)" +
+                $")"
             );
         }
     }

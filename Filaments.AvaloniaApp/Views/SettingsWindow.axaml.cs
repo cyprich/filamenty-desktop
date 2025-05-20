@@ -36,6 +36,7 @@ public partial class SettingsWindow : Window
         PostgresAddress.Text = Configuration.Host;
         PostgresPort.Text = Configuration.Port;
         PostgresName.Text = Configuration.Database;
+        PostgresSchema.Text = Configuration.Schema;
 
         DatabaseComboBox_OnSelectionChanged(null, null);
     }
@@ -52,12 +53,6 @@ public partial class SettingsWindow : Window
             return;
         }
 
-        //Configuration.Username = PostgresUsername.Text!;
-        //Configuration.Password = PostgresPassword.Text!;
-        //Configuration.Host = PostgresAddress.Text!;
-        //Configuration.Port = PostgresPort.Text!;
-        //Configuration.Database = PostgresName.Text!;
-
         var selected = DatabaseComboBox.SelectedItem?.ToString()?.ToLower();
 
         switch (selected)
@@ -70,6 +65,7 @@ public partial class SettingsWindow : Window
                     PostgresUsername.Text!,
                     PostgresPassword.Text!,
                     PostgresName.Text!,
+                    PostgresSchema.Text!,
                     new PostgresDatabaseProvider()
                 );
                 break;
@@ -97,8 +93,6 @@ public partial class SettingsWindow : Window
 
     private bool ValidateParameters()
     {
-        var selected = DatabaseComboBox.SelectedItem?.ToString()?.ToLower();
-
         switch (DatabaseComboBox.SelectedItem?.ToString()?.ToLower())
         {
             case "postgresql":
@@ -106,7 +100,8 @@ public partial class SettingsWindow : Window
                     string.IsNullOrEmpty(PostgresPassword.Text) ||
                     string.IsNullOrEmpty(PostgresAddress.Text) ||
                     string.IsNullOrEmpty(PostgresPort.Text) ||
-                    string.IsNullOrEmpty(PostgresName.Text))
+                    string.IsNullOrEmpty(PostgresName.Text) ||
+                    string.IsNullOrEmpty(PostgresSchema.Text))
                 {
                     return false;
                 }

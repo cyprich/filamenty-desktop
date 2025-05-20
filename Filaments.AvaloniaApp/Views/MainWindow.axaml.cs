@@ -45,7 +45,6 @@ namespace Filaments.AvaloniaApp.Views
         private async void HandleSettingsWindow(object? sender, RoutedEventArgs e)
         {
             var window = new SettingsWindow();
-            //window.ShowDialog(this);
             var result = await window.ShowDialog<bool>(this);
 
             if (result && DataContext is MainWindowViewModel vm)

@@ -10,6 +10,8 @@ namespace Filaments.CommonLibrary
     {
         public string Name { get; } = "Sqlite";
 
+        // TODO like the whole db
+
         public Task<Filament[]> GetFilaments()
         {
             throw new NotImplementedException();
@@ -36,6 +38,11 @@ namespace Filaments.CommonLibrary
         }
 
         public Filament GetFilamentFromReader(object? reader)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task PrepareDatabase()
         {
             throw new NotImplementedException();
         }

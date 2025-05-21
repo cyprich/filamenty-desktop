@@ -22,8 +22,11 @@ namespace Filaments.CommonLibrary
 
         public Filament GetFilamentFromReader(object? reader);
 
-        protected Task HandleMissingSchema();
 
-        protected Task HandleMissingTable();
+        public Task PrepareDatabase();
+
+        public Task HandleMissingSchema();
+
+        public Task HandleMissingTable();
     }
 }

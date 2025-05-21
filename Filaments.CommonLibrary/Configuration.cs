@@ -20,7 +20,7 @@ namespace Filaments.CommonLibrary
 
         public static bool IsCorrect { get; private set; }
 
-        public static bool Change(string host, string port, string username, string password, string database, string schema, IDatabaseProvider provider)
+        public static async Task<bool> Change(string host, string port, string username, string password, string database, string schema, IDatabaseProvider provider)
         {
             Host = host;
             Port = port;
@@ -30,11 +30,13 @@ namespace Filaments.CommonLibrary
             Schema = schema;
             Provider = provider;
 
+            await Provider.PrepareDatabase();
+
             IsCorrect = true;
             return IsCorrect;
         }
 
-        public static bool Change(string host, string port, string username, string password, string database, string schema, string provider)
+        public static async Task<bool> Change(string host, string port, string username, string password, string database, string schema, string provider)
         {
             Host = host;
             Port = port;
@@ -44,10 +46,16 @@ namespace Filaments.CommonLibrary
             Schema = schema;
 
             IsCorrect = ChangeProvider(provider);
+
+            if (Provider != null)
+            {
+                await Provider.PrepareDatabase();
+            }
+
             return IsCorrect;
         }
 
-        public static bool Change(Dictionary<string, string> configDictionary)
+        public static async Task <bool> Change(Dictionary<string, string> configDictionary)
         {
             foreach (var f in Fields)
             {
@@ -59,14 +67,14 @@ namespace Filaments.CommonLibrary
             }
 
             var d = configDictionary;
-            return Change(d["host"], d["port"],
+            return await Change(d["host"], d["port"],
                 d["username"], d["password"],
                 d["database"], d["schema"],
                 d["provider"]
             );
         }
 
-        public static bool Change(FileInfo file)
+        public static async Task<bool> Change(FileInfo file)
         {
             if (!File.Exists(file.FullName))
             {
@@ -76,7 +84,7 @@ namespace Filaments.CommonLibrary
 
             try
             {
-                return Change(File.ReadAllLines(file.FullName)
+                return await Change((await File.ReadAllLinesAsync(file.FullName))
                     .Select(line => line.Split("="))
                     .ToDictionary(part => part[0], part => part[1]));
             }

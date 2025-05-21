@@ -31,7 +31,7 @@ namespace Filaments.AvaloniaApp.Views
         private async void HandleAdd(object? sender, RoutedEventArgs e)
         {
             var window = new AddFilamentWindow();
-            _ = window.ShowDialog(this);
+            _ = await window.ShowDialog<bool>(this);
             await UpdateUi();
         }
 
@@ -58,7 +58,7 @@ namespace Filaments.AvaloniaApp.Views
         {
             if (DataContext is MainWindowViewModel vm)
             {
-                await vm.LoadFilamentsAsync();
+                await vm.LoadFilaments();
             }
         }
 

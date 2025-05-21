@@ -17,7 +17,7 @@ namespace Filaments.CommonLibrary
         {
             ConnString = $"Host={Configuration.Host};Port={Configuration.Port};" +
                 $"Username={Configuration.Username};Password={Configuration.Password};" +
-                $"Database={Configuration.Database}";
+                $"Database=postgres"; // TODO 
         }
 
         private async Task<NpgsqlConnection> GetConnection()
@@ -34,13 +34,7 @@ namespace Filaments.CommonLibrary
         {
             var result = new List<Filament>();
 
-            UpdateConnString();
-
-            await HandleMissingSchema();
-            await HandleMissingTable();
-
-            var dataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
-            var conn = await dataSource.OpenConnectionAsync();
+            var conn = await GetConnection();
             await using var cmd = new NpgsqlCommand($"select * from {Configuration.Schema}.filament order by id;", conn);
 
             var reader = await cmd.ExecuteReaderAsync();
@@ -194,6 +188,13 @@ namespace Filaments.CommonLibrary
             );
         }
 
+        public async Task PrepareDatabase()
+        {
+            Console.WriteLine($"Preparing Database... ConnString: {ConnString}");
+            await HandleMissingSchema();
+            await HandleMissingTable();
+        }
+
         public async Task HandleMissingSchema()
         {
             var conn = await GetConnection();
@@ -204,16 +205,16 @@ namespace Filaments.CommonLibrary
 
         public async Task HandleMissingTable()
         {
-            var conn = await GetConnection();
-
             try
             {
-                await using var cmd1 = new NpgsqlCommand($"select * from {Configuration.Schema}.filament;", conn);
-                await cmd1.ExecuteNonQueryAsync();
+                var conn = await GetConnection();
+                await using var cmd = new NpgsqlCommand($"select * from {Configuration.Schema}.filament;", conn);
+                await cmd.ExecuteNonQueryAsync();
             }
             catch (Exception e)
             {
-                await using var cmd2 = new NpgsqlCommand(
+                var conn = await GetConnection();
+                await using var cmd = new NpgsqlCommand(
                     $"drop table if exists {Configuration.Schema}.filament cascade;" +
                     $"create table {Configuration.Schema}.filament (" +
                     "id serial primary key," +
@@ -233,7 +234,7 @@ namespace Filaments.CommonLibrary
                     "original_weight numeric(5, 0)" +
                     ")", conn);
 
-                await cmd2.ExecuteNonQueryAsync();
+                await cmd.ExecuteNonQueryAsync();
             }
         }
     }

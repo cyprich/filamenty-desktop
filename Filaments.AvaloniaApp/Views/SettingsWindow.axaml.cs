@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -52,9 +53,9 @@ public partial class SettingsWindow : Window
         DatabaseComboBox_OnSelectionChanged(null, null);
     }
 
-    private void HandleExit(object? sender, RoutedEventArgs? e)
+    private async void HandleExit(object? sender, RoutedEventArgs? e)
     {
-        if (!ValidateParametersMessageBox()) { return; }
+        if (await ValidateParametersMessageBox() == false) { return; }
         var selected = DatabaseComboBox.SelectedItem?.ToString()?.ToLower();
 
         switch (selected)
@@ -71,7 +72,7 @@ public partial class SettingsWindow : Window
                     new PostgresDatabaseProvider()
                 );
 
-                if (!result)
+                if (!(await result))
                 {
                     var box = MessageBoxManager.GetMessageBoxStandard("Error",
                         "Failed to save configuration" +
@@ -120,14 +121,14 @@ public partial class SettingsWindow : Window
         }
     }
 
-    private bool ValidateParametersMessageBox()
+    private async Task<bool> ValidateParametersMessageBox()
     {
         if (!ValidateParameters())
         {
             var box = MessageBoxManager.GetMessageBoxStandard("Invalid fields",
                     "Couldn't submit\nPlease make sure that all fields are filled in correctly",
                     ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
-            _ = box.ShowAsPopupAsync(this);
+            await box.ShowAsPopupAsync(this);
             return false;
         }
 
@@ -172,16 +173,7 @@ public partial class SettingsWindow : Window
             {
                 var path = files[0].Path.LocalPath;
                 var result = Configuration.Change(new FileInfo(path));
-                if (result)
-                {
-                    UpdateUiFromConfiguration();
-                    var box = MessageBoxManager.GetMessageBoxStandard("Success",
-                        "Successfully loaded file",
-                        ButtonEnum.Ok,
-                        MsBox.Avalonia.Enums.Icon.Success);
-                    _ = box.ShowAsync();
-                }
-                else
+                if (!await result)
                 {
                     var box = MessageBoxManager.GetMessageBoxStandard("Error",
                         "Failed to load configuration file" +
@@ -189,6 +181,10 @@ public partial class SettingsWindow : Window
                         ButtonEnum.Ok,
                         MsBox.Avalonia.Enums.Icon.Error);
                     _ = box.ShowAsync();
+                }
+                else
+                {
+                    UpdateUiFromConfiguration();
                 }
             }
         }
@@ -236,9 +232,9 @@ public partial class SettingsWindow : Window
         }
     }
 
-    private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
+    private async void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
-        e.Cancel = !ValidateParametersMessageBox();
+        e.Cancel = !(await ValidateParametersMessageBox());
     }
 
     private void HandlePostgresDefaults(object? sender, RoutedEventArgs e)

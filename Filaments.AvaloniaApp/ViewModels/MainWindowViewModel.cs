@@ -20,7 +20,7 @@ namespace Filaments.AvaloniaApp.ViewModels
 
         public MainWindowViewModel()
         {
-            _ = LoadFilamentsAsync();
+            _ = LoadFilaments();
             Filaments.CollectionChanged += Filaments_CollectionChanged;
         }
 
@@ -29,8 +29,7 @@ namespace Filaments.AvaloniaApp.ViewModels
             OnPropertyChanged(nameof(FilamentCount));
         }
 
-
-        public async Task LoadFilamentsAsync()
+        public async Task LoadFilaments()
         {
             Filaments.Clear();
             if (Configuration.Provider != null)

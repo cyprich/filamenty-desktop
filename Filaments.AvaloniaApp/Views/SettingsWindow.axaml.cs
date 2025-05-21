@@ -1,9 +1,11 @@
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using Filaments.CommonLibrary;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
@@ -31,13 +33,19 @@ public partial class SettingsWindow : Window
                 break;
         }
 
+        UpdateUiFromConfiguration();
+        //DatabaseComboBox_OnSelectionChanged(null, null);
+    }
+
+    private void UpdateUiFromConfiguration()
+    {
         PostgresUsername.Text = Configuration.Username;
         PostgresPassword.Text = Configuration.Password;
         PostgresAddress.Text = Configuration.Host;
         PostgresPort.Text = Configuration.Port;
         PostgresName.Text = Configuration.Database;
         PostgresSchema.Text = Configuration.Schema;
-
+        DatabaseComboBox.SelectedItem = Configuration.Provider?.Name;
         DatabaseComboBox_OnSelectionChanged(null, null);
     }
 
@@ -46,7 +54,7 @@ public partial class SettingsWindow : Window
 
         if (!ValidateParameters())
         {
-            var box = MessageBoxManager.GetMessageBoxStandard("Invalid fields", 
+            var box = MessageBoxManager.GetMessageBoxStandard("Invalid fields",
                     "Couldn't submit\nPlease make sure that all fields are filled in correctly",
                     ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
             _ = box.ShowAsPopupAsync(this);
@@ -59,7 +67,7 @@ public partial class SettingsWindow : Window
         {
             case "postgresql":
                 // NOTE - I used null suppression, because the values are validated in ValidateParameters() function
-                Configuration.Change(
+                var result = Configuration.Change(
                     PostgresAddress.Text!,
                     PostgresPort.Text!,
                     PostgresUsername.Text!,
@@ -68,6 +76,17 @@ public partial class SettingsWindow : Window
                     PostgresSchema.Text!,
                     new PostgresDatabaseProvider()
                 );
+
+                if (!result)
+                {
+                    var box = MessageBoxManager.GetMessageBoxStandard("Error",
+                        "Failed to save configuration" +
+                        "\nMake sure that all fields are filled in and valid.",
+                        ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    _ = box.ShowAsync();
+                    return;
+                }
+
                 break;
             case "sqlite":
                 break;
@@ -111,6 +130,58 @@ public partial class SettingsWindow : Window
                 return false;
             default:
                 return false;
+        }
+    }
+
+    private async void HandleLoad(object? sender, RoutedEventArgs e)
+    {
+        var fileFilter = new FilePickerFileType(".env files") { Patterns = ["*.env"] };
+
+        var topLevel = TopLevel.GetTopLevel(this);
+
+        if (topLevel?.StorageProvider != null)
+        {
+            var files = await topLevel.StorageProvider.OpenFilePickerAsync(
+                new FilePickerOpenOptions()
+                {
+                    Title = "Open file",
+                    AllowMultiple = false,
+                    FileTypeFilter = [fileFilter]
+                }
+            );
+            if (files.Count >= 1)
+            {
+                var path = files[0].Path.LocalPath;
+
+                var result = Configuration.Change(new FileInfo(path));
+                if (result)
+                {
+                    UpdateUiFromConfiguration();
+                    var box = MessageBoxManager.GetMessageBoxStandard("Success",
+                        "Successfully loaded file",
+                        ButtonEnum.Ok,
+                        MsBox.Avalonia.Enums.Icon.Success);
+                    _ = box.ShowAsync();
+                }
+                else
+                {
+                    var box = MessageBoxManager.GetMessageBoxStandard("Error",
+                        "Failed to load configuration file" +
+                        "\nMake sure the file is correct",
+                        ButtonEnum.Ok,
+                        MsBox.Avalonia.Enums.Icon.Error);
+                    _ = box.ShowAsync();
+                }
+            }
+        }
+        else
+        {
+            var box = MessageBoxManager.GetMessageBoxStandard("Error", 
+                "StorageProvider is not available.",
+                ButtonEnum.Ok, 
+                MsBox.Avalonia.Enums.Icon.Error);
+            _ = box.ShowAsync();
+            return;
         }
     }
 }

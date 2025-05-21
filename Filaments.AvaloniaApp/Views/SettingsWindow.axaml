@@ -9,9 +9,12 @@
         Height="450">
 	<DockPanel>
 		<Menu DockPanel.Dock="Top">
-			<MenuItem Header="_Save"/>
-			<MenuItem Header="_Load"/>
-			<MenuItem Header="_Reset"/>
+		    <MenuItem Header="_File">
+				<MenuItem Header="_Save"/>
+				<MenuItem Header="_Load" Click="HandleLoad"/>
+				<MenuItem Header="_Reset"/>
+            </MenuItem>
+			<MenuItem Header="_Help"/>
 			<MenuItem Header="_Exit"/>
 		</Menu>
 

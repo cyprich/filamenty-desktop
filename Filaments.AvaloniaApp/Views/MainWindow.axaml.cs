@@ -24,9 +24,10 @@ namespace Filaments.AvaloniaApp.Views
         {
             if (File.Exists(".env"))
             {
-                var box = MessageBoxManager.GetMessageBoxStandard("Load credentials?",
-                    "Configuration file for database credentials found. Do you want to load it?",
-                    ButtonEnum.YesNo, MsBox.Avalonia.Enums.Icon.Database
+                var box = MessageBoxManager.GetMessageBoxStandard("Load settings?",
+                    "Settings file found" +
+                    "\nDo you want to load it?",
+                    ButtonEnum.YesNo, MsBox.Avalonia.Enums.Icon.Question
                 );
 
                 var result = await box.ShowAsync();

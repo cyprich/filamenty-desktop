@@ -1,7 +1,7 @@
 ﻿using Filaments.CommonLibrary;
 
 Configuration.Change(new FileInfo(".env"));
-var filaments = await DatabaseHandler.GetFilaments();
+var filaments = await DatabaseManager.GetFilaments();
 
 foreach (var f in filaments)
 {

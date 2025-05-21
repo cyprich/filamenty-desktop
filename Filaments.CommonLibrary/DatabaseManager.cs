@@ -2,7 +2,7 @@
 
 namespace Filaments.CommonLibrary
 {
-    public static class DatabaseHandler
+    public static class DatabaseManager
     {
         public static async Task<Filament[]> GetFilaments()
         {

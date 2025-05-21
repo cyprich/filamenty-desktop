@@ -80,8 +80,6 @@ public partial class SettingsWindow : Window
                     _ = box.ShowAsync();
                     return;
                 }
-
-
                 break;
             case "sqlite":
                 break;
@@ -138,7 +136,7 @@ public partial class SettingsWindow : Window
 
     private async void HandleLoad(object? sender, RoutedEventArgs e)
     {
-        var fileFilter = new FilePickerFileType(".env files") { Patterns = ["*.env"] };
+        var envFileFilter = new FilePickerFileType(".env files") { Patterns = ["*.env"] };
 
         var topLevel = TopLevel.GetTopLevel(this);
 
@@ -149,7 +147,7 @@ public partial class SettingsWindow : Window
                 {
                     Title = "Open file",
                     AllowMultiple = false,
-                    FileTypeFilter = [fileFilter]
+                    FileTypeFilter = [envFileFilter, FilePickerFileTypes.All]
                 }
             );
             if (files.Count >= 1)
@@ -191,5 +189,13 @@ public partial class SettingsWindow : Window
     private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
         e.Cancel = !ValidateParametersMessageBox();
+    }
+
+    private void HandlePostgresDefaults(object? sender, RoutedEventArgs e)
+    {
+        Configuration.Change("192.168.1.1", "5432", 
+            "admin", "admin", 
+            "postgres", "filaments", "PostgreSQL");
+        UpdateUiFromConfiguration();
     }
 }

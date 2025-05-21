@@ -69,9 +69,17 @@ namespace Filaments.CommonLibrary
                 return false;
             }
 
-            return Change(File.ReadAllLines(file.FullName)
-                .Select(line => line.Split("="))
-                .ToDictionary(part => part[0], part => part[1]));
+            try
+            {
+                return Change(File.ReadAllLines(file.FullName)
+                    .Select(line => line.Split("="))
+                    .ToDictionary(part => part[0], part => part[1]));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
         }
 
         public static bool ChangeProvider(string provider)

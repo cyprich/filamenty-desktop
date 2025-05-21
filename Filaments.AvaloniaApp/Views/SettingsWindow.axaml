@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="500"
         x:Class="Filaments.AvaloniaApp.SettingsWindow"
         Title="Settings"
         Width="300"
@@ -15,7 +15,6 @@
 				<MenuItem Header="_Load" Click="HandleLoad"/>
 				<MenuItem Header="_Reset"/>
             </MenuItem>
-			<MenuItem Header="_Help"/>
 			<MenuItem Header="_Exit" Click="HandleExit"/>
 		</Menu>
 
@@ -37,7 +36,7 @@
 
 			<Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
 				  ColumnDefinitions="Auto *"
-				  RowDefinitions="Auto Auto Auto Auto Auto Auto"
+				  RowDefinitions="Auto Auto Auto Auto Auto Auto Auto"
 				  x:Name="PostgresGrid">
 
 				<TextBlock Grid.Row="0" Grid.Column="0" Text="Username" VerticalAlignment="Center"/>
@@ -58,7 +57,13 @@
 
 				<TextBlock Grid.Row="5" Grid.Column="0" Text="Schema" VerticalAlignment="Center"/>
 				<TextBox Grid.Row="5" Grid.Column="1" Margin="8 4" x:Name="PostgresSchema"/>
-
+                
+                <Button Grid.Row="6" Grid.Column="0" 
+                    Grid.ColumnSpan="2" HorizontalAlignment="Stretch"
+					Click="HandlePostgresDefaults"
+                    VerticalAlignment="Center" Margin="8">
+					<TextBlock HorizontalAlignment="Center">See example values</TextBlock>
+                </Button>
 			</Grid>
 
 			<Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SqliteGrid">

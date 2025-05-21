@@ -6,14 +6,16 @@
         x:Class="Filaments.AvaloniaApp.SettingsWindow"
         Title="Settings"
         Width="300"
-        Height="450"
+        Height="500"
         Closing="Window_OnClosing">
 	<DockPanel>
 		<Menu DockPanel.Dock="Top">
 		    <MenuItem Header="_File">
-				<MenuItem Header="_Save"/>
+				<MenuItem Header="_Save" Click="HandleSave"/>
 				<MenuItem Header="_Load" Click="HandleLoad"/>
-				<MenuItem Header="_Reset"/>
+            </MenuItem>
+			<MenuItem Header="_Help">
+				<MenuItem Header="Show _PostgreSQL configuration file structure" Click="HandlePostgresDefaultsWindow"/>
             </MenuItem>
 			<MenuItem Header="_Exit" Click="HandleExit"/>
 		</Menu>
@@ -52,17 +54,17 @@
 				<TextBlock Grid.Row="3" Grid.Column="0" Text="Port" VerticalAlignment="Center"/>
 				<TextBox Grid.Row="3" Grid.Column="1" Margin="8 4" x:Name="PostgresPort"/>
 
-				<TextBlock Grid.Row="4" Grid.Column="0" Text="DB Name" VerticalAlignment="Center"/>
+				<TextBlock Grid.Row="4" Grid.Column="0" Text="Database Name" VerticalAlignment="Center"/>
 				<TextBox Grid.Row="4" Grid.Column="1" Margin="8 4" x:Name="PostgresName"/>
 
 				<TextBlock Grid.Row="5" Grid.Column="0" Text="Schema" VerticalAlignment="Center"/>
 				<TextBox Grid.Row="5" Grid.Column="1" Margin="8 4" x:Name="PostgresSchema"/>
                 
                 <Button Grid.Row="6" Grid.Column="0" 
-                    Grid.ColumnSpan="2" HorizontalAlignment="Stretch"
+                    Grid.ColumnSpan="2" HorizontalAlignment="Center"
 					Click="HandlePostgresDefaults"
                     VerticalAlignment="Center" Margin="8">
-					<TextBlock HorizontalAlignment="Center">See example values</TextBlock>
+					<TextBlock HorizontalAlignment="Center">Fill in example values</TextBlock>
                 </Button>
 			</Grid>
 

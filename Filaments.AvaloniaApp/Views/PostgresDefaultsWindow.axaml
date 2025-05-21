@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200"
+        x:Class="Filaments.AvaloniaApp.PostgresDefaultsWindow"
+        Width="200"
+        Height="200"
+        Title="PostgreSQL Configuration Example">
+  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+      <TextBlock>provider=PostgreSQL</TextBlock>
+      <TextBlock>username=admin</TextBlock>
+      <TextBlock>password=admin</TextBlock>
+      <TextBlock>host=192.168.1.1</TextBlock>
+      <TextBlock>port=5432</TextBlock>
+      <TextBlock>database=postgres</TextBlock>
+      <TextBlock>schema=filaments</TextBlock>
+  </StackPanel>
+</Window>

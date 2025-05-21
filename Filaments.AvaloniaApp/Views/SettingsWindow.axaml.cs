@@ -134,26 +134,43 @@ public partial class SettingsWindow : Window
         return true;
     }
 
-    private async void HandleLoad(object? sender, RoutedEventArgs e)
+    private TopLevel? TryGetTopLevel()
     {
-        var envFileFilter = new FilePickerFileType(".env files") { Patterns = ["*.env"] };
-
         var topLevel = TopLevel.GetTopLevel(this);
 
-        if (topLevel?.StorageProvider != null)
+        if (topLevel?.StorageProvider == null)
         {
+            var box = MessageBoxManager.GetMessageBoxStandard("Error",
+                "StorageProvider is not available.",
+                ButtonEnum.Ok,
+                MsBox.Avalonia.Enums.Icon.Error);
+            _ = box.ShowAsync();
+            return null;
+        }
+
+        return topLevel;
+    }
+
+    private async void HandleLoad(object? sender, RoutedEventArgs e)
+    {
+        var topLevel = TryGetTopLevel();
+
+        if (topLevel != null)
+        {
+            var envFileFilter = new FilePickerFileType("Environment file") { Patterns = ["*.env"] };
+            var txtFileFilter = new FilePickerFileType("Text file") { Patterns = ["*.txt"] };
+
             var files = await topLevel.StorageProvider.OpenFilePickerAsync(
                 new FilePickerOpenOptions()
                 {
                     Title = "Open file",
                     AllowMultiple = false,
-                    FileTypeFilter = [envFileFilter, FilePickerFileTypes.All]
+                    FileTypeFilter = [envFileFilter, txtFileFilter, FilePickerFileTypes.All]
                 }
             );
             if (files.Count >= 1)
             {
                 var path = files[0].Path.LocalPath;
-
                 var result = Configuration.Change(new FileInfo(path));
                 if (result)
                 {
@@ -175,14 +192,47 @@ public partial class SettingsWindow : Window
                 }
             }
         }
-        else
+    }
+    private async void HandleSave(object? sender, RoutedEventArgs e)
+    {
+        var toplevel = TryGetTopLevel();
+
+        if (toplevel != null)
         {
-            var box = MessageBoxManager.GetMessageBoxStandard("Error",
-                "StorageProvider is not available.",
-                ButtonEnum.Ok,
-                MsBox.Avalonia.Enums.Icon.Error);
-            _ = box.ShowAsync();
-            return;
+            var file = await toplevel.StorageProvider.SaveFilePickerAsync(
+                new FilePickerSaveOptions
+                {
+                    DefaultExtension = ".env",
+                    ShowOverwritePrompt = true,
+                    SuggestedFileName = ".env"
+                }
+            );
+
+            if (file != null)
+            {
+                var path = file.Path.LocalPath;
+                var result = Configuration.Save(new FileInfo(path));
+                if (result)
+                {
+                    var box = MessageBoxManager.GetMessageBoxStandard(
+                        "Success", 
+                        "Settings successfully saved",
+                        ButtonEnum.Ok, 
+                        MsBox.Avalonia.Enums.Icon.Info
+                    );
+                    _ = box.ShowAsync();
+                }
+                else
+                {
+                    var box = MessageBoxManager.GetMessageBoxStandard(
+                        "Error", 
+                        "Could not save settings",
+                        ButtonEnum.Ok, 
+                        MsBox.Avalonia.Enums.Icon.Warning
+                    );
+                    _ = box.ShowAsync();
+                }
+            }
         }
     }
 
@@ -197,5 +247,11 @@ public partial class SettingsWindow : Window
             "admin", "admin", 
             "postgres", "filaments", "PostgreSQL");
         UpdateUiFromConfiguration();
+    }
+
+    private void HandlePostgresDefaultsWindow(object? sender, RoutedEventArgs e)
+    {
+        var window = new PostgresDefaultsWindow();
+        window.ShowDialog(this);
     }
 }

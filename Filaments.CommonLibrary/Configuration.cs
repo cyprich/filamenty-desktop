@@ -16,7 +16,7 @@ namespace Filaments.CommonLibrary
         public static string Database { get; set; } = "";
         public static string Schema { get; set; } = "";
         public static IDatabaseProvider? Provider { get; set; }
-        public static string[] RequiredFields => ["host", "port", "username", "password", "database", "provider"];
+        public static string[] Fields => ["host", "port", "username", "password", "database", "provider", "schema"];
 
         public static bool Change(string host, string port, string username, string password, string database, string schema, IDatabaseProvider provider)
         {
@@ -43,10 +43,9 @@ namespace Filaments.CommonLibrary
             return ChangeProvider(provider);
         }
 
-
         public static bool Change(Dictionary<string, string> configDictionary)
         {
-            foreach (var f in RequiredFields)
+            foreach (var f in Fields)
             {
                 if (!configDictionary.ContainsKey(f))
                 {
@@ -81,7 +80,6 @@ namespace Filaments.CommonLibrary
                 return false;
             }
         }
-
         public static bool ChangeProvider(string provider)
         {
             switch (provider.ToLower())
@@ -97,6 +95,32 @@ namespace Filaments.CommonLibrary
                 default:
                     return false;
             }
+        }
+
+        public static bool Save(FileInfo file)
+        {
+            var lines = new List<string>
+            {
+                $"provider={Provider?.Name}",
+                $"username={Username}",
+                $"password={Password}",
+                $"host={Host}",
+                $"port={Port}",
+                $"database={Database}",
+                $"schema={Schema}"
+            };
+
+            try
+            {
+                File.WriteAllLines(file.FullName, lines);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+
+            return true;
         }
     }
 }

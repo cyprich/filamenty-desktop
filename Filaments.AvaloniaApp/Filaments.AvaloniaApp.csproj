@@ -42,4 +42,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Filaments.CommonLibrary\Filaments.CommonLibrary.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\PostgresDefaultsWindow.axaml.cs">
+      <DependentUpon>PostgresDefaultsWindow.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

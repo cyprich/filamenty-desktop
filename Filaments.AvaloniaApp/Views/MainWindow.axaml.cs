@@ -15,32 +15,6 @@ namespace Filaments.AvaloniaApp.Views
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel();
-
-            Opened += MainWindow_Opened;
-
-        }
-
-        private async void MainWindow_Opened(object? sender, EventArgs e)
-        {
-            if (File.Exists(".env"))
-            {
-                var box = MessageBoxManager.GetMessageBoxStandard("Load settings?",
-                    "Settings file found" +
-                    "\nDo you want to load it?",
-                    ButtonEnum.YesNo, MsBox.Avalonia.Enums.Icon.Question
-                );
-
-                var result = await box.ShowAsync();
-                if (result == ButtonResult.Yes)
-                {
-                    Configuration.Change(new FileInfo(".env"));
-
-                    if (DataContext is MainWindowViewModel vm)
-                    {
-                        await vm.LoadFilamentsAsync();
-                    }
-                }
-            }
         }
 
         private async void HandleSettingsWindow(object? sender, RoutedEventArgs e)

@@ -28,5 +28,23 @@ namespace Filaments.AvaloniaApp.Views
                 _ = vm.LoadFilamentsAsync();
             }
         }
+
+        private void HandleAdd(object? sender, RoutedEventArgs e)
+        {
+            var window = new AddFilamentWindow();
+            _ = window.ShowDialog(this);
+        }
+
+        private void HandleEdit(object? sender, RoutedEventArgs e)
+        {
+            _ = 0;
+            //throw new NotImplementedException();
+        }
+
+        private void HandleDelete(object? sender, RoutedEventArgs e)
+        {
+            _ = 0;
+            //throw new NotImplementedException();
+        }
     }
 }

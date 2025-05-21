@@ -25,7 +25,7 @@
 				<MenuItem Header="_Exit"/>
             </MenuItem>
 			<MenuItem Header="_Edit">
-				<MenuItem Header="_Add Filament"/>
+				<MenuItem Header="_Add Filament" Click="HandleAdd"/>
 				<MenuItem Header="_Edit Filament"/>
 				<MenuItem Header="_Delete Filament"/>
             </MenuItem>
@@ -42,7 +42,7 @@
 				AutoGenerateColumns="False"
 				IsReadOnly="True"
 				GridLinesVisibility="All"
-                x:Name="MainDataGrid">
+                x:Name="MainDataGrid" RowHeight="40">
 				<DataGrid.Columns>
 					<DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
 					<DataGridTextColumn Header="Vendor" Binding="{Binding Vendor}"/>
@@ -101,11 +101,14 @@
 
 				</DataGrid.Columns>
 			</DataGrid>
-			<StackPanel Grid.Row="1" Grid.Column="1" Margin="24 0">
-                <StackPanel Orientation="Horizontal">
+			<StackPanel Grid.Row="1" Grid.Column="1" Margin="24 0 0 0">
+                <StackPanel Orientation="Horizontal" Margin="8 0 8 12">
 					<TextBlock Text="Count: "/>
 					<TextBlock Text="{Binding FilamentCount}"/>
                 </StackPanel>
+				<Button Content="Add" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0 0 0 8" Click="HandleAdd" x:Name="AddButton"/>
+				<Button Content="Edit" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0 0 0 8" Click="HandleEdit" x:Name="EditButton"/>
+				<Button Content="Delete" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0 0 0 8" Click="HandleDelete" x:Name="DeleteButton"/>
             </StackPanel>
 		</Grid>
 	</DockPanel>

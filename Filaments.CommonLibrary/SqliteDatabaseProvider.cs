@@ -40,7 +40,12 @@ namespace Filaments.CommonLibrary
             throw new NotImplementedException();
         }
 
-        public void Create()
+        public Task HandleMissingSchema()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task HandleMissingTable()
         {
             throw new NotImplementedException();
         }

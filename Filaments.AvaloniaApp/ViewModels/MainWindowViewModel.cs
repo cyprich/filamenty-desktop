@@ -33,10 +33,13 @@ namespace Filaments.AvaloniaApp.ViewModels
         public async Task LoadFilamentsAsync()
         {
             Filaments.Clear();
-            var filaments = await DatabaseManager.GetFilaments(); // TODO not just Config.Provider? 
-            foreach (var f in filaments)
+            if (Configuration.Provider != null)
             {
-                Filaments.Add(f);
+                var filaments = await Configuration.Provider.GetFilaments(); 
+                foreach (var f in filaments)
+                {
+                    Filaments.Add(f);
+                }
             }
         }
 

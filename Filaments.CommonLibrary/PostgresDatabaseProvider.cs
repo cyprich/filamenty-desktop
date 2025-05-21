@@ -35,21 +35,15 @@ namespace Filaments.CommonLibrary
             var result = new List<Filament>();
 
             UpdateConnString();
+
+            await HandleMissingSchema();
+            await HandleMissingTable();
+
             var dataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
             var conn = await dataSource.OpenConnectionAsync();
             await using var cmd = new NpgsqlCommand($"select * from {Configuration.Schema}.filament order by id;", conn);
 
-            NpgsqlDataReader? reader = null;
-            try
-            {
-                reader = await cmd.ExecuteReaderAsync();
-            }
-            catch (NpgsqlException e)
-            {
-                Console.WriteLine(e);
-                Create(); // TODO? 
-                reader = await cmd.ExecuteReaderAsync();
-            }
+            var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
             {
@@ -200,32 +194,47 @@ namespace Filaments.CommonLibrary
             );
         }
 
-        public async void Create()
+        public async Task HandleMissingSchema()
         {
-            UpdateConnString();
-            var dataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
+            var conn = await GetConnection();
+            await using var cmd = new NpgsqlCommand(
+                $"create schema if not exists {Configuration.Schema};", conn);
+            await cmd.ExecuteNonQueryAsync();
+        }
 
-            await using var command = dataSource?.CreateCommand(
-                $"drop schema if exists {Configuration.Schema};" +
-                $"create schema {Configuration.Schema}" +
-                $"create table {Configuration.Schema}.filament (" +
-                $"id serial primary key," +
-                $"vendor varchar(50) not null," +
-                $"material varchar(50) not null," +
-                $"price numeric(5, 2) not null," +
-                $"color_hex char(7) not null," +
-                $"color_name varchar(50) not null," +
-                $"color2_hex char(7)," +
-                $"color2_name varchar(50)," +
-                $"temp_min numeric(3, 0) not null," +
-                $"temp_max numeric(3, 0)," +
-                $"temp_bed_min numeric(3, 0) not null," +
-                $"temp_bed_max numeric(3, 0)," +
-                $"measured_weight numeric(5, 0)," +
-                $"spool_weight numeric(5, 0)," +
-                $"original_weight numeric(5, 0)" +
-                $")"
-            );
+        public async Task HandleMissingTable()
+        {
+            var conn = await GetConnection();
+
+            try
+            {
+                await using var cmd1 = new NpgsqlCommand($"select * from {Configuration.Schema}.filament;", conn);
+                await cmd1.ExecuteNonQueryAsync();
+            }
+            catch (Exception e)
+            {
+                await using var cmd2 = new NpgsqlCommand(
+                    $"drop table if exists {Configuration.Schema}.filament cascade;" +
+                    $"create table {Configuration.Schema}.filament (" +
+                    "id serial primary key," +
+                    "vendor varchar(50) not null," +
+                    "material varchar(50) not null," +
+                    "price numeric(5, 2) not null," +
+                    "color_hex char(7) not null," +
+                    "color_name varchar(50) not null," +
+                    "color2_hex char(7)," +
+                    "color2_name varchar(50)," +
+                    "temp_min numeric(3, 0) not null," +
+                    "temp_max numeric(3, 0)," +
+                    "temp_bed_min numeric(3, 0) not null," +
+                    "temp_bed_max numeric(3, 0)," +
+                    "measured_weight numeric(5, 0)," +
+                    "spool_weight numeric(5, 0)," +
+                    "original_weight numeric(5, 0)" +
+                    ")", conn);
+
+                await cmd2.ExecuteNonQueryAsync();
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,8 +45,8 @@ namespace Filaments.CommonLibrary
             }
         }
 
-        private float _price;
-        public float Price
+        private double _price;
+        public double Price
         {
             get => _price;
             set
@@ -186,7 +187,7 @@ namespace Filaments.CommonLibrary
         public string CentsPerGram => $"{(Price / OriginalWeight * 100):F2}";
 
 
-        public Filament(int id, string vendor, string material, float price, string colorHex, string colorName, string? color2Hex, string? color2Name, int tempMin, int? tempMax, int tempBedMin, int? tempBedMax, int measuredWeight, int spoolWeight, int originalWeight)
+        public Filament(int id, string vendor, string material, double price, string colorHex, string colorName, string? color2Hex, string? color2Name, int tempMin, int? tempMax, int tempBedMin, int? tempBedMax, int measuredWeight, int spoolWeight, int originalWeight)
         {
             Id = id;
             Vendor = vendor;

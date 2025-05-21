@@ -12,7 +12,13 @@ namespace Filaments.CommonLibrary
 
         public Task<Filament[]> GetFilaments();
 
-        public Filament ParseFilament(object? reader);
+        public Task EditFilament(Filament filament);
+
+        public Task AddFilament(Filament filament);
+
+        public Task<bool> TestConnection();
+
+        public Filament GetFilamentFromReader(object? reader);
 
         protected void Create();
     }

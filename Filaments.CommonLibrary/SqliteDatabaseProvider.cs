@@ -15,7 +15,22 @@ namespace Filaments.CommonLibrary
             throw new NotImplementedException();
         }
 
-        public Filament ParseFilament(object? reader)
+        public Task EditFilament(Filament filament)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddFilament(Filament filament)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> TestConnection()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Filament GetFilamentFromReader(object? reader)
         {
             throw new NotImplementedException();
         }

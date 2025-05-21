@@ -13,62 +13,142 @@ namespace Filaments.CommonLibrary
 
         public string ConnString { get; set; } = "";
 
-        public NpgsqlDataSource? DataSource { get; private set; }
-
-        private void Update()
+        private void UpdateConnString()
         {
             ConnString = $"Host={Configuration.Host};Port={Configuration.Port};" +
                          $"Username={Configuration.Username};Password={Configuration.Password};" +
                          $"Database={Configuration.Database}";
-            DataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
         }
 
         public async Task<Filament[]> GetFilaments()
         {
             var result = new List<Filament>();
 
-            Update();
-            if (DataSource != null)
+            UpdateConnString();
+            var dataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
+            var conn = await dataSource.OpenConnectionAsync();
+            await using var cmd = new NpgsqlCommand($"select * from {Configuration.Schema}.filament order by id;", conn);
+
+            NpgsqlDataReader? reader = null;
+            try
             {
-                Console.WriteLine("Loading data from database...");
+                reader = await cmd.ExecuteReaderAsync();
+            }
+            catch (NpgsqlException e)
+            {
+                Console.WriteLine(e);
+                Create(); // TODO? 
+                reader = await cmd.ExecuteReaderAsync();
+            }
 
-                var conn = await DataSource.OpenConnectionAsync();
-                await using var cmd = new NpgsqlCommand($"select * from {Configuration.Schema}.filament;", conn);
-
-                NpgsqlDataReader? reader = null;
-                try
-                {
-                    reader = await cmd.ExecuteReaderAsync();
-                }
-                catch (NpgsqlException e)
-                {
-                    Console.WriteLine(e);
-                    Create();
-                    reader = await cmd.ExecuteReaderAsync();
-                }
-
-                while (await reader.ReadAsync())
-                {
-                    result.Add(ParseFilament(reader));
-                }
+            while (await reader.ReadAsync())
+            {
+                result.Add(GetFilamentFromReader(reader));
             }
 
             return result.ToArray();
         }
 
+        public async Task AddFilament(Filament filament)
+        {
+            UpdateConnString();
+            var dataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
+            var conn = await dataSource.OpenConnectionAsync();
+
+            await using var cmd = new NpgsqlCommand($"insert into {Configuration.Schema}.filament " +
+                $"(vendor, material, price, color_hex, color_name, color2_hex, color2_name, " +
+                $"temp_min, temp_max, temp_bed_min, temp_bed_max, measured_weight, spool_weight, original_weight) " +
+                $"values ( ($1), ($2), ($3), ($4), ($5), ($6), ($7), ($8), ($9), ($10), ($11), ($12), ($13), ($14) )", conn)
+            {
+                Parameters =
+                {
+                    new NpgsqlParameter {Value = filament.Vendor},
+                    new NpgsqlParameter {Value = filament.Material},
+                    new NpgsqlParameter {Value = filament.Price},
+                    new NpgsqlParameter {Value = filament.ColorHex},
+                    new NpgsqlParameter {Value = filament.ColorName},
+                    new NpgsqlParameter {Value = (object?)filament.Color2Hex ?? DBNull.Value},
+                    new NpgsqlParameter {Value = (object?)filament.Color2Name ?? DBNull.Value},
+                    new NpgsqlParameter {Value = filament.TempMin},
+                    new NpgsqlParameter {Value = (object?)filament.TempMax ?? DBNull.Value},
+                    new NpgsqlParameter {Value = filament.TempBedMin},
+                    new NpgsqlParameter {Value = (object?)filament.TempBedMax ?? DBNull.Value},
+                    new NpgsqlParameter {Value = filament.MeasuredWeight},
+                    new NpgsqlParameter {Value = filament.SpoolWeight},
+                    new NpgsqlParameter {Value = filament.OriginalWeight},
+                }
+            };
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        public async Task EditFilament(Filament filament)
+        {
+            UpdateConnString();
+            var dataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
+            var conn = await dataSource.OpenConnectionAsync();
+
+            await using var cmd = new NpgsqlCommand(
+                $"update {Configuration.Schema}.filament set " +
+                $"vendor = ($1), " +
+                $"material = ($2), " +
+                $"price = ($3), " +
+                $"color_hex = ($4), " +
+                $"color_name = ($5), " +
+                $"color2_hex = ($6), " +
+                $"color2_name = ($7), " +
+                $"temp_min = ($8), " +
+                $"temp_max = ($9), " +
+                $"temp_bed_min = ($10), " +
+                $"temp_bed_max = ($11), " +
+                $"measured_weight = ($12), " +
+                $"spool_weight = ($13), " +
+                $"original_weight = ($14) " +
+                $"where id = {filament.Id}",
+                conn
+            )
+            {
+                Parameters =
+                {
+                    new NpgsqlParameter {Value = filament.Vendor},
+                    new NpgsqlParameter {Value = filament.Material},
+                    new NpgsqlParameter {Value = filament.Price},
+                    new NpgsqlParameter {Value = filament.ColorHex},
+                    new NpgsqlParameter {Value = filament.ColorName},
+                    new NpgsqlParameter {Value = (object?)filament.Color2Hex ?? DBNull.Value},
+                    new NpgsqlParameter {Value = (object?)filament.Color2Name ?? DBNull.Value},
+                    new NpgsqlParameter {Value = filament.TempMin},
+                    new NpgsqlParameter {Value = (object?)filament.TempMax ?? DBNull.Value},
+                    new NpgsqlParameter {Value = filament.TempBedMin},
+                    new NpgsqlParameter {Value = (object?)filament.TempBedMax ?? DBNull.Value},
+                    new NpgsqlParameter {Value = filament.MeasuredWeight},
+                    new NpgsqlParameter {Value = filament.SpoolWeight},
+                    new NpgsqlParameter {Value = filament.OriginalWeight},
+                    new NpgsqlParameter {Value = filament.Id}
+                }
+            };
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        public Task<bool> TestConnection()
+        {
+            throw new NotImplementedException();
+        }
+
         // NOTE - Begin of AI-generated code
-        public Filament ParseFilament(object? reader)
+        public Filament GetFilamentFromReader(object? reader)
         {
             if (reader is not NpgsqlDataReader npgsqlReader)
             {
                 throw new ArgumentException("Expected NpgsqlDataReader");
             }
 
-            return ParseFilament(npgsqlReader);
+            return GetFilamentFromReader(npgsqlReader);
         }
         // NOTE - End of AI-generated code
 
-        private static Filament ParseFilament(NpgsqlDataReader reader)
+        private static Filament GetFilamentFromReader(NpgsqlDataReader reader)
         {
             // columns that can be null
             string? color2Hex = reader.IsDBNull(reader.GetOrdinal("color2_hex"))
@@ -106,8 +186,10 @@ namespace Filaments.CommonLibrary
 
         public async void Create()
         {
-            Update();
-            await using var command = DataSource?.CreateCommand(
+            UpdateConnString();
+            var dataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
+
+            await using var command = dataSource?.CreateCommand(
                 $"drop schema if exists {Configuration.Schema};" +
                 $"create schema {Configuration.Schema}" +
                 $"create table {Configuration.Schema}.filament (" +

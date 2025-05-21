@@ -43,7 +43,8 @@ namespace Filaments.CommonLibrary
             Database = database;
             Schema = schema;
 
-            return ChangeProvider(provider);
+            IsCorrect = ChangeProvider(provider);
+            return IsCorrect;
         }
 
         public static bool Change(Dictionary<string, string> configDictionary)

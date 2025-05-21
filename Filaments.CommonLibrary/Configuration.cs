@@ -18,6 +18,8 @@ namespace Filaments.CommonLibrary
         public static IDatabaseProvider? Provider { get; set; }
         public static string[] Fields => ["host", "port", "username", "password", "database", "provider", "schema"];
 
+        public static bool IsCorrect { get; private set; }
+
         public static bool Change(string host, string port, string username, string password, string database, string schema, IDatabaseProvider provider)
         {
             Host = host;
@@ -28,7 +30,8 @@ namespace Filaments.CommonLibrary
             Schema = schema;
             Provider = provider;
 
-            return true;
+            IsCorrect = true;
+            return IsCorrect;
         }
 
         public static bool Change(string host, string port, string username, string password, string database, string schema, string provider)
@@ -49,7 +52,8 @@ namespace Filaments.CommonLibrary
             {
                 if (!configDictionary.ContainsKey(f))
                 {
-                    return false;
+                    IsCorrect = false;
+                    return IsCorrect;
                 }
             }
 
@@ -65,7 +69,8 @@ namespace Filaments.CommonLibrary
         {
             if (!File.Exists(file.FullName))
             {
-                return false;
+                IsCorrect = false;
+                return IsCorrect;
             }
 
             try
@@ -77,7 +82,8 @@ namespace Filaments.CommonLibrary
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return false;
+                IsCorrect = false;
+                return IsCorrect;
             }
         }
         public static bool ChangeProvider(string provider)

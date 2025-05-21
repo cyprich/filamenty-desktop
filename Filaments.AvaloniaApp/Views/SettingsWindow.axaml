@@ -6,7 +6,8 @@
         x:Class="Filaments.AvaloniaApp.SettingsWindow"
         Title="Settings"
         Width="300"
-        Height="450">
+        Height="450"
+        Closing="Window_OnClosing">
 	<DockPanel>
 		<Menu DockPanel.Dock="Top">
 		    <MenuItem Header="_File">
@@ -15,7 +16,7 @@
 				<MenuItem Header="_Reset"/>
             </MenuItem>
 			<MenuItem Header="_Help"/>
-			<MenuItem Header="_Exit"/>
+			<MenuItem Header="_Exit" Click="HandleExit"/>
 		</Menu>
 
 		<Grid Margin="16"
@@ -65,8 +66,7 @@
 			</Grid>
 
 			<StackPanel Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-				<Button Content="Save" Margin="0 0 8 0" Click="HandleSubmit"/>
-				<Button Content="Cancel" Click="HandleCancel"/>
+				<Button Content="Exit" Margin="0 0 8 0" Click="HandleExit"/>
 			</StackPanel>
 		</Grid>
 	</DockPanel>

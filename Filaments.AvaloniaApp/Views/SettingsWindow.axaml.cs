@@ -16,6 +16,9 @@ namespace Filaments.AvaloniaApp;
 public partial class SettingsWindow : Window
 {
     private readonly IDatabaseProvider[] _providers = [new PostgresDatabaseProvider(), new SqliteDatabaseProvider()];
+
+    private bool AbleToClose { get; set; }
+
     public SettingsWindow()
     {
         InitializeComponent();
@@ -49,18 +52,9 @@ public partial class SettingsWindow : Window
         DatabaseComboBox_OnSelectionChanged(null, null);
     }
 
-    private void HandleSubmit(object? sender, RoutedEventArgs e)
+    private void HandleExit(object? sender, RoutedEventArgs? e)
     {
-
-        if (!ValidateParameters())
-        {
-            var box = MessageBoxManager.GetMessageBoxStandard("Invalid fields",
-                    "Couldn't submit\nPlease make sure that all fields are filled in correctly",
-                    ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
-            _ = box.ShowAsPopupAsync(this);
-            return;
-        }
-
+        if (!ValidateParametersMessageBox()) { return; }
         var selected = DatabaseComboBox.SelectedItem?.ToString()?.ToLower();
 
         switch (selected)
@@ -87,6 +81,7 @@ public partial class SettingsWindow : Window
                     return;
                 }
 
+
                 break;
             case "sqlite":
                 break;
@@ -95,12 +90,6 @@ public partial class SettingsWindow : Window
         }
 
         Close(true);
-    }
-
-
-    private void HandleCancel(object? sender, RoutedEventArgs e)
-    {
-        Close(false);
     }
 
     private void DatabaseComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs? e)
@@ -131,6 +120,20 @@ public partial class SettingsWindow : Window
             default:
                 return false;
         }
+    }
+
+    private bool ValidateParametersMessageBox()
+    {
+        if (!ValidateParameters())
+        {
+            var box = MessageBoxManager.GetMessageBoxStandard("Invalid fields",
+                    "Couldn't submit\nPlease make sure that all fields are filled in correctly",
+                    ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+            _ = box.ShowAsPopupAsync(this);
+            return false;
+        }
+
+        return true;
     }
 
     private async void HandleLoad(object? sender, RoutedEventArgs e)
@@ -176,12 +179,17 @@ public partial class SettingsWindow : Window
         }
         else
         {
-            var box = MessageBoxManager.GetMessageBoxStandard("Error", 
+            var box = MessageBoxManager.GetMessageBoxStandard("Error",
                 "StorageProvider is not available.",
-                ButtonEnum.Ok, 
+                ButtonEnum.Ok,
                 MsBox.Avalonia.Enums.Icon.Error);
             _ = box.ShowAsync();
             return;
         }
+    }
+
+    private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        e.Cancel = !ValidateParametersMessageBox();
     }
 }

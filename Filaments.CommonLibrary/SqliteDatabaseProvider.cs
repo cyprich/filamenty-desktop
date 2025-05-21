@@ -25,6 +25,11 @@ namespace Filaments.CommonLibrary
             throw new NotImplementedException();
         }
 
+        public Task DeleteFilament(Filament filament)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> TestConnection()
         {
             throw new NotImplementedException();

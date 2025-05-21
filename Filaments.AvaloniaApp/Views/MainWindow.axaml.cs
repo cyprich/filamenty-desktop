@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Filaments.AvaloniaApp.ViewModels;
@@ -22,29 +25,42 @@ namespace Filaments.AvaloniaApp.Views
         {
             var window = new SettingsWindow();
             _ = await window.ShowDialog<bool>(this);
-
-            if (DataContext is MainWindowViewModel vm)
-            {
-                _ = vm.LoadFilamentsAsync();
-            }
+            await UpdateUi();
         }
 
-        private void HandleAdd(object? sender, RoutedEventArgs e)
+        private async void HandleAdd(object? sender, RoutedEventArgs e)
         {
             var window = new AddFilamentWindow();
             _ = window.ShowDialog(this);
+            await UpdateUi();
         }
 
-        private void HandleEdit(object? sender, RoutedEventArgs e)
+        private async void HandleEdit(object? sender, RoutedEventArgs e)
         {
+            // TODO
             _ = 0;
-            //throw new NotImplementedException();
         }
 
-        private void HandleDelete(object? sender, RoutedEventArgs e)
+        private async void HandleDelete(object? sender, RoutedEventArgs e)
         {
-            _ = 0;
-            //throw new NotImplementedException();
+            var selectedItems = MainDataGrid.SelectedItems;
+            if (selectedItems.Count > 0 && Configuration.Provider != null)
+            {
+                foreach (var i in selectedItems)
+                {
+                    await Configuration.Provider.DeleteFilament((Filament)i);
+                }
+            }
+            await UpdateUi();
         }
+
+        private async Task UpdateUi()
+        {
+            if (DataContext is MainWindowViewModel vm)
+            {
+                await vm.LoadFilamentsAsync();
+            }
+        }
+
     }
 }

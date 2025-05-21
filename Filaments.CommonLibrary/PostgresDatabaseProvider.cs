@@ -16,8 +16,18 @@ namespace Filaments.CommonLibrary
         private void UpdateConnString()
         {
             ConnString = $"Host={Configuration.Host};Port={Configuration.Port};" +
-                         $"Username={Configuration.Username};Password={Configuration.Password};" +
-                         $"Database={Configuration.Database}";
+                $"Username={Configuration.Username};Password={Configuration.Password};" +
+                $"Database={Configuration.Database}";
+        }
+
+        private async Task<NpgsqlConnection> GetConnection()
+        {
+            UpdateConnString();
+
+            var dataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
+            var conn = await dataSource.OpenConnectionAsync();
+
+            return conn;
         }
 
         public async Task<Filament[]> GetFilaments()
@@ -51,9 +61,7 @@ namespace Filaments.CommonLibrary
 
         public async Task AddFilament(Filament filament)
         {
-            UpdateConnString();
-            var dataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
-            var conn = await dataSource.OpenConnectionAsync();
+            var conn = await GetConnection();
 
             await using var cmd = new NpgsqlCommand($"insert into {Configuration.Schema}.filament " +
                 $"(vendor, material, price, color_hex, color_name, color2_hex, color2_name, " +
@@ -82,11 +90,19 @@ namespace Filaments.CommonLibrary
             await cmd.ExecuteNonQueryAsync();
         }
 
+        public async Task DeleteFilament(Filament filament)
+        {
+            var conn = await GetConnection();
+
+            await using var cmd = new NpgsqlCommand(
+                $"delete from {Configuration.Schema}.filament where id = {filament.Id};", conn);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
         public async Task EditFilament(Filament filament)
         {
-            UpdateConnString();
-            var dataSource = new NpgsqlDataSourceBuilder(ConnString).Build();
-            var conn = await dataSource.OpenConnectionAsync();
+            var conn = await GetConnection();
 
             await using var cmd = new NpgsqlCommand(
                 $"update {Configuration.Schema}.filament set " +

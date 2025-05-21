@@ -8,12 +8,11 @@ namespace Filaments.CommonLibrary
         {
             if (Configuration.Provider == null)
             {
-                throw new InvalidOperationException("Database provider is not set.");
+                return [];
             }
 
             var filaments = await Configuration.Provider.GetFilaments();
             return filaments;
         }
-
     }
 }

@@ -44,15 +44,17 @@ namespace Filaments.AvaloniaApp.Views
                 {
                     await Configuration.Provider.DeleteFilament((Filament)i);
                 }
+                await UpdateUi();
             }
-            await UpdateUi();
-        }
-
-        private async Task UpdateUi()
-        {
-            if (DataContext is MainWindowViewModel vm)
+            else
             {
-                await vm.LoadFilaments();
+                var box = MessageBoxManager.GetMessageBoxStandard(
+                    "Warning",
+                    "Couldn't delete, no rows were selected", 
+                    ButtonEnum.Ok,
+                    MsBox.Avalonia.Enums.Icon.Warning
+                );
+                _ = box.ShowAsync();
             }
         }
 
@@ -62,6 +64,14 @@ namespace Filaments.AvaloniaApp.Views
             {
                 await Configuration.Provider.EditFilament(filament);
                 await UpdateUi();
+            }
+        }
+
+        private async Task UpdateUi()
+        {
+            if (DataContext is MainWindowViewModel vm)
+            {
+                await vm.LoadFilaments();
             }
         }
     }

@@ -96,8 +96,8 @@
 					</DataGridTemplateColumn>
 
 
-					<!-- weight --> 
-					<DataGridTemplateColumn Header="Weight [g]" SortMemberPath="WeightLeft">
+					<!-- left weight --> 
+					<DataGridTemplateColumn Header="Weight Left [g]" SortMemberPath="WeightLeft">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
 								<TextBlock Text="{Binding WeightLeft}" HorizontalAlignment="Center" VerticalAlignment="Center"/>

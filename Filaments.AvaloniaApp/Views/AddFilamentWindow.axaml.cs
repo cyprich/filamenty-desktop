@@ -27,7 +27,7 @@ public partial class AddFilamentWindow : Window
             var box = MessageBoxManager.GetMessageBoxStandard(
                 "Warning",
                 "It seems like you are not connected to database" +
-                "\nOpen Settings menu to connect to database" +
+                "\nYou can open Settings menu to connect to database" +
                 "\nAdding filament will have no effect" +
                 "\nDo you wish to continue?",
                 ButtonEnum.YesNo,

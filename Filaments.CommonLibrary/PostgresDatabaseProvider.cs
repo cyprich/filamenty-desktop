@@ -92,6 +92,16 @@ namespace Filaments.CommonLibrary
             await cmd.ExecuteNonQueryAsync();
         }
 
+        public async Task DeleteFilament(int id)
+        {
+            var conn = await GetConnection();
+
+            await using var cmd = new NpgsqlCommand(
+                $"delete from {Configuration.Schema}.filament where id = {id};", conn);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
         public async Task EditFilament(Filament filament)
         {
             var conn = await GetConnection();

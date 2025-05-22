@@ -136,6 +136,15 @@ namespace Filaments.CommonLibrary
             await cmd.ExecuteReaderAsync();
         }
 
+        public async Task DeleteFilament(int id)
+        {
+            await using var conn = GetConn();
+            conn.Open();
+
+            await using var cmd = new SqliteCommand($"delete from filament where id = {id}", conn);
+            await cmd.ExecuteReaderAsync();
+        }
+
         public Task<bool> TestConnection()
         {
             return Task.FromResult(false);  // TODO

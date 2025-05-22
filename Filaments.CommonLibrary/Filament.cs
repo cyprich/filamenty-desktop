@@ -164,7 +164,6 @@ namespace Filaments.CommonLibrary
         }
 
         private int _spoolWeight;
-
         public int SpoolWeight
         {
             get => _spoolWeight;
@@ -177,7 +176,6 @@ namespace Filaments.CommonLibrary
         }
 
         private int _originalWeight;
-
         public int OriginalWeight
         {
             get => _originalWeight;
@@ -202,8 +200,6 @@ namespace Filaments.CommonLibrary
                 OnPropertyChanged(nameof(MeasuredWeight));
             }
         }
-
-        //public string PriceFormatted => $"{Price:F2}";
         public string PriceFormatted
         {
             get => $"{Price:F2}";
@@ -228,7 +224,6 @@ namespace Filaments.CommonLibrary
                 }
             }
         }
-
 
         public Filament(int id, string vendor, string material, double price, string colorHex, string colorName, string? color2Hex, string? color2Name, int tempMin, int? tempMax, int tempBedMin, int? tempBedMax, int measuredWeight, int spoolWeight, int originalWeight)
         {

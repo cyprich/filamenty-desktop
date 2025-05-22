@@ -18,6 +18,8 @@ namespace Filaments.CommonLibrary
 
         public Task DeleteFilament(Filament filament);
 
+        public Task DeleteFilament(int id);
+
         public Task<bool> TestConnection(); // TODO
 
         public Filament? GetFilamentFromReader<T>(T reader);

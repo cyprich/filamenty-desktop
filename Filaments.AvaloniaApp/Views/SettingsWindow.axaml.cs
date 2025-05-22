@@ -37,11 +37,11 @@ public partial class SettingsWindow : Window
                 break;
         }
 
-        UpdateUiFromConfiguration();
+        UpdateUi();
         //DatabaseComboBox_OnSelectionChanged(null, null);
     }
 
-    private void UpdateUiFromConfiguration()
+    private void UpdateUi()
     {
         PostgresUsername.Text = Configuration.Username;
         PostgresPassword.Text = Configuration.Password;
@@ -184,7 +184,7 @@ public partial class SettingsWindow : Window
                 }
                 else
                 {
-                    UpdateUiFromConfiguration();
+                    UpdateUi();
                 }
             }
         }
@@ -237,12 +237,12 @@ public partial class SettingsWindow : Window
         e.Cancel = !(await ValidateParametersMessageBox());
     }
 
-    private void HandlePostgresDefaults(object? sender, RoutedEventArgs e)
+    private async void HandlePostgresDefaults(object? sender, RoutedEventArgs e)
     {
-        Configuration.Change("192.168.1.1", "5432", 
+        await Configuration.Change("192.168.1.1", "5432", 
             "admin", "admin", 
             "postgres", "filaments", "PostgreSQL");
-        UpdateUiFromConfiguration();
+        UpdateUi();
     }
 
     private void HandlePostgresDefaultsWindow(object? sender, RoutedEventArgs e)

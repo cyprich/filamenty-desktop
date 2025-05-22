@@ -213,6 +213,7 @@ namespace Filaments.CommonLibrary
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 var conn = await GetConnection();
                 await using var cmd = new NpgsqlCommand(
                     $"drop table if exists {Configuration.Schema}.filament cascade;" +

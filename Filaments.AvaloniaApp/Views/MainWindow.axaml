@@ -36,19 +36,22 @@
         </Menu>
 
 		<Grid Margin="24" RowDefinitions="Auto * Auto" ColumnDefinitions="* Auto">
-			<TextBlock Grid.Row="0" Grid.Column="0" Text="Filaments " FontSize="24" FontWeight="Bold" Margin="0 0 0 16"/>
+			<TextBlock Grid.Row="0" Grid.Column="0" Text="Filaments" FontSize="24" FontWeight="Bold" Margin="0 0 0 16"/>
 			<DataGrid Grid.Row="1" Grid.Column="0"
 				ItemsSource="{Binding Filaments}"
 				AutoGenerateColumns="False"
-				IsReadOnly="True"
 				GridLinesVisibility="All"
-                x:Name="MainDataGrid" RowHeight="40">
+                x:Name="MainDataGrid" 
+                RowHeight="40">
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
+					<DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
 					<DataGridTextColumn Header="Vendor" Binding="{Binding Vendor}"/>
 					<DataGridTextColumn Header="Material" Binding="{Binding Material}"/>
 
-					<DataGridTemplateColumn Header="Color" SortMemberPath="ColorName">
+
+
+					<!-- primary color --> 
+                    <DataGridTemplateColumn Header="Color" SortMemberPath="ColorName" >
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8">
@@ -57,8 +60,17 @@
 								</StackPanel>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8">
+                                    <ColorPicker Color="{Binding ColorHex, Mode=TwoWay, Converter={StaticResource HexToColorConverter}}"/>
+									<TextBox Text="{Binding ColorName}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
 					</DataGridTemplateColumn>
 
+					<!-- secondary color --> 
 					<DataGridTemplateColumn Header="Secondary Color" SortMemberPath="Color2Name">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>

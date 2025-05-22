@@ -43,7 +43,7 @@ public partial class AddFilamentWindow : Window
 
     private async void HandleAdd(object? sender, RoutedEventArgs e)
     {
-        _ = RgbToHex(ColorPicker.Color);
+        //_ = (ColorPicker.Color);
 
         if (!ValidateFields())
         {
@@ -63,9 +63,9 @@ public partial class AddFilamentWindow : Window
             VendorTextBox.Text ?? "",
             MaterialTextBox.Text ?? "",
             (double)(PriceNumberBox?.Value ?? 0),
-            RgbToHex(ColorPicker.Color),
+            Utils.ColorToHex(ColorPicker.Color),
             ColorTextBox.Text ?? "",
-            RgbToHex(Color2Picker.Color),
+            Utils.ColorToHex(Color2Picker.Color),
             Color2TextBox.Text,
             (int)(TempMinNumberBox.Value ?? 0),
             (int)(TempMaxNumberBox.Value ?? 0),
@@ -157,8 +157,4 @@ public partial class AddFilamentWindow : Window
         Close(false);
     }
 
-    private string RgbToHex(Color color)
-    {
-        return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
-    }
 }

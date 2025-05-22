@@ -5,7 +5,10 @@
              RequestedThemeVariant="Light">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
-    <Application.DataTemplates>
+             <Application.Resources>
+                 <local:HexToColorConverter x:Key="HexToColorConverter" />
+             </Application.Resources>
+             <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
   

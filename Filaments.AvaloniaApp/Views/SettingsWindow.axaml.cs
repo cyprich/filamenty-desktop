@@ -231,6 +231,7 @@ public partial class SettingsWindow : Window
 
     private async void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
+        // TODO remember me
         e.Cancel = !(await ValidateParametersMessageBox());
     }
 

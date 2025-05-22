@@ -44,11 +44,10 @@
                 x:Name="MainDataGrid" 
                 RowHeight="40">
 				<DataGrid.Columns>
+					<!-- id, vendor, material --> 
 					<DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
 					<DataGridTextColumn Header="Vendor" Binding="{Binding Vendor}"/>
 					<DataGridTextColumn Header="Material" Binding="{Binding Material}"/>
-
-
 
 					<!-- primary color --> 
                     <DataGridTemplateColumn Header="Color" SortMemberPath="ColorName" >
@@ -63,7 +62,10 @@
 						<DataGridTemplateColumn.CellEditingTemplate>
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8">
-                                    <ColorPicker Color="{Binding ColorHex, Mode=TwoWay, Converter={StaticResource HexToColorConverter}}"/>
+									<!-- NOTE - begin of AI-generated code --> 
+                                    <ColorPicker Color="{Binding ColorHex, Mode=TwoWay, 
+									    Converter={StaticResource HexToColorConverter}}"/>
+									<!-- NOTE - end of AI-generated code --> 
 									<TextBox Text="{Binding ColorName}"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -80,15 +82,96 @@
 								</StackPanel>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8">
+									<!-- NOTE - begin of AI-generated code --> 
+                                    <ColorPicker Color="{Binding Color2Hex, Mode=TwoWay, 
+									    Converter={StaticResource HexToColorConverter}}"/>
+									<!-- NOTE - End of AI-generated code --> 
+									<TextBox Text="{Binding Color2Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
 					</DataGridTemplateColumn>
 
-					<DataGridTextColumn Header="Weight [g]" Binding="{Binding WeightLeft}"/>
-					<DataGridTextColumn Header="Spool Weight [g]" Binding="{Binding SpoolWeight}" />
-					<DataGridTextColumn Header="Measured Weight [g]" Binding="{Binding MeasuredWeight}"/>
 
-					<DataGridTextColumn Header="Price [EUR]" Binding="{Binding PriceFormatted}"/>
-					<DataGridTextColumn Header="Price per Gram [CENT]" Binding="{Binding CentsPerGram}"/>
+					<!-- weight --> 
+					<DataGridTemplateColumn Header="Weight [g]" SortMemberPath="WeightLeft">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding WeightLeft}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<NumericUpDown Value="{Binding WeightLeft, Mode=TwoWay}" 
+                                    Increment="1" Minimum="0" FormatString="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
 
+					<!-- spool weight --> 
+					<DataGridTemplateColumn Header="Spool Weight [g]" SortMemberPath="SpoolWeight">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding SpoolWeight}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<NumericUpDown Value="{Binding SpoolWeight, Mode=TwoWay}" 
+                                    Increment="1" Minimum="0" FormatString="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+
+					<!-- measured weight --> 
+					<DataGridTemplateColumn Header="Measured Weight [g]" SortMemberPath="MeasuredWeight">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding MeasuredWeight}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<NumericUpDown Value="{Binding MeasuredWeight, Mode=TwoWay}" 
+                                    Increment="1" Minimum="0" FormatString="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    
+					<!-- price --> 
+					<DataGridTemplateColumn Header="Price [EUR]" SortMemberPath="Price">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding PriceFormatted}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<NumericUpDown Value="{Binding PriceFormatted, Mode=TwoWay}" 
+                                    Increment="0.01" Minimum="0" FormatString="0.00" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+
+					<!-- price per gram --> 
+					<DataGridTemplateColumn Header="Price per Gram [Cent]" SortMemberPath="CentsPerGram">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding CentsPerGram}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<NumericUpDown Value="{Binding CentsPerGram, Mode=TwoWay}" 
+                                    Increment="0.01" Minimum="0" FormatString="0.00" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+
+					<!-- temperature --> 
 					<DataGridTemplateColumn Header="Temperature [C]" SortMemberPath="TempMin">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
@@ -98,8 +181,20 @@
 								</StackPanel>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+									<NumericUpDown Value="{Binding TempMin, Mode=TwoWay}" 
+										Increment="1" Minimum="0" FormatString="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+									<Separator Width="10"/>
+									<NumericUpDown Value="{Binding TempMax, Mode=TwoWay}" 
+										Increment="1" Minimum="0" FormatString="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+								</StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
 					</DataGridTemplateColumn>
 
+					<!-- bed --> 
 					<DataGridTemplateColumn Header="Bed Temperature [C]" SortMemberPath="TempBedMin">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
@@ -109,10 +204,24 @@
 								</StackPanel>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
+						<DataGridTemplateColumn.CellEditingTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+									<NumericUpDown Value="{Binding TempBedMin, Mode=TwoWay}" 
+										Increment="1" Minimum="0" FormatString="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+									<Separator Width="10"/>
+									<NumericUpDown Value="{Binding TempBedMax, Mode=TwoWay}" 
+										Increment="1" Minimum="0" FormatString="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+								</StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
 					</DataGridTemplateColumn>
 
 				</DataGrid.Columns>
 			</DataGrid>
+
+			
+			<!-- side panel --> 
 			<StackPanel Grid.Row="1" Grid.Column="1" Margin="24 0 0 0">
                 <StackPanel Orientation="Horizontal" Margin="8 0 8 12">
 					<TextBlock Text="Count: "/>

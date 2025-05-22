@@ -47,7 +47,6 @@ public partial class SettingsWindow : Window
         PostgresPassword.Text = Configuration.Password;
         PostgresAddress.Text = Configuration.Host;
         PostgresPort.Text = Configuration.Port;
-        PostgresName.Text = Configuration.Database;
         PostgresSchema.Text = Configuration.Schema;
         DatabaseComboBox.SelectedItem = Configuration.Provider?.Name;
         DatabaseComboBox_OnSelectionChanged(null, null);
@@ -67,7 +66,6 @@ public partial class SettingsWindow : Window
                     PostgresPort.Text!,
                     PostgresUsername.Text!,
                     PostgresPassword.Text!,
-                    PostgresName.Text!,
                     PostgresSchema.Text!,
                     new PostgresDatabaseProvider()
                 );
@@ -107,7 +105,6 @@ public partial class SettingsWindow : Window
                     string.IsNullOrEmpty(PostgresPassword.Text) ||
                     string.IsNullOrEmpty(PostgresAddress.Text) ||
                     string.IsNullOrEmpty(PostgresPort.Text) ||
-                    string.IsNullOrEmpty(PostgresName.Text) ||
                     string.IsNullOrEmpty(PostgresSchema.Text))
                 {
                     return false;
@@ -235,14 +232,6 @@ public partial class SettingsWindow : Window
     private async void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
         e.Cancel = !(await ValidateParametersMessageBox());
-    }
-
-    private async void HandlePostgresDefaults(object? sender, RoutedEventArgs e)
-    {
-        await Configuration.Change("192.168.1.1", "5432", 
-            "admin", "admin", 
-            "postgres", "filaments", "PostgreSQL");
-        UpdateUi();
     }
 
     private void HandlePostgresDefaultsWindow(object? sender, RoutedEventArgs e)

@@ -17,7 +17,7 @@ namespace Filaments.CommonLibrary
         {
             ConnString = $"Host={Configuration.Host};Port={Configuration.Port};" +
                 $"Username={Configuration.Username};Password={Configuration.Password};" +
-                $"Database=postgres"; // TODO 
+                $"Database=postgres"; 
         }
 
         private async Task<NpgsqlConnection> GetConnection()

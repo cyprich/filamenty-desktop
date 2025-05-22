@@ -9,11 +9,10 @@
         Title="PostgreSQL Configuration Example">
   <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
       <TextBlock>provider=PostgreSQL</TextBlock>
-      <TextBlock>username=admin</TextBlock>
-      <TextBlock>password=admin</TextBlock>
+      <TextBlock>username=jozko</TextBlock>
+      <TextBlock>password=password</TextBlock>
       <TextBlock>host=192.168.1.1</TextBlock>
       <TextBlock>port=5432</TextBlock>
-      <TextBlock>database=postgres</TextBlock>
       <TextBlock>schema=filaments</TextBlock>
   </StackPanel>
 </Window>

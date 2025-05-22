@@ -43,29 +43,21 @@
 
 				<TextBlock Grid.Row="0" Grid.Column="0" Text="Username" VerticalAlignment="Center"/>
 				<TextBox Grid.Row="0" Grid.Column="1" Margin="8 4"
-						 x:Name="PostgresUsername"/>
+					x:Name="PostgresUsername" Watermark="jozko"/>
 
 				<TextBlock Grid.Row="1" Grid.Column="0" Text="Password" VerticalAlignment="Center"/>
-				<TextBox Grid.Row="1" Grid.Column="1" Margin="8 4" x:Name="PostgresPassword" PasswordChar="*"/>
+				<TextBox Grid.Row="1" Grid.Column="1" Margin="8 4" 
+					x:Name="PostgresPassword" PasswordChar="*"/>
 
 				<TextBlock Grid.Row="2" Grid.Column="0" Text="IP address" VerticalAlignment="Center"/>
-				<TextBox Grid.Row="2" Grid.Column="1" Margin="8 4" x:Name="PostgresAddress"/>
+				<TextBox Grid.Row="2" Grid.Column="1" Margin="8 4" x:Name="PostgresAddress" Watermark="192.168.1.1"/>
 
 				<TextBlock Grid.Row="3" Grid.Column="0" Text="Port" VerticalAlignment="Center"/>
-				<TextBox Grid.Row="3" Grid.Column="1" Margin="8 4" x:Name="PostgresPort"/>
-
-				<TextBlock Grid.Row="4" Grid.Column="0" Text="Database Name" VerticalAlignment="Center"/>
-				<TextBox Grid.Row="4" Grid.Column="1" Margin="8 4" x:Name="PostgresName"/>
+				<TextBox Grid.Row="3" Grid.Column="1" Margin="8 4" x:Name="PostgresPort" Watermark="5432"/>
 
 				<TextBlock Grid.Row="5" Grid.Column="0" Text="Schema" VerticalAlignment="Center"/>
-				<TextBox Grid.Row="5" Grid.Column="1" Margin="8 4" x:Name="PostgresSchema"/>
+				<TextBox Grid.Row="5" Grid.Column="1" Margin="8 4" x:Name="PostgresSchema" Watermark="filaments"/>
                 
-                <Button Grid.Row="6" Grid.Column="0" 
-                    Grid.ColumnSpan="2" HorizontalAlignment="Center"
-					Click="HandlePostgresDefaults"
-                    VerticalAlignment="Center" Margin="8">
-					<TextBlock HorizontalAlignment="Center">Fill in example values</TextBlock>
-                </Button>
 			</Grid>
 
 			<Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SqliteGrid">

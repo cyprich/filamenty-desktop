@@ -13,20 +13,18 @@ namespace Filaments.CommonLibrary
         public static string Port { get; set; } = "";
         public static string Username { get; set; } = "";
         public static string Password { get; set; } = "";
-        public static string Database { get; set; } = "";
         public static string Schema { get; set; } = "";
         public static IDatabaseProvider? Provider { get; set; }
-        public static string[] Fields => ["host", "port", "username", "password", "database", "provider", "schema"];
+        public static string[] Fields => ["host", "port", "username", "password", "provider", "schema"];
 
         public static bool IsCorrect { get; private set; }
 
-        public static async Task<bool> Change(string host, string port, string username, string password, string database, string schema, IDatabaseProvider provider)
+        public static async Task<bool> Change(string host, string port, string username, string password, string schema, IDatabaseProvider provider)
         {
             Host = host;
             Port = port;
             Username = username;
             Password = password;
-            Database = database;
             Schema = schema;
             Provider = provider;
 
@@ -36,13 +34,12 @@ namespace Filaments.CommonLibrary
             return IsCorrect;
         }
 
-        public static async Task<bool> Change(string host, string port, string username, string password, string database, string schema, string provider)
+        public static async Task<bool> Change(string host, string port, string username, string password, string schema, string provider)
         {
             Host = host;
             Port = port;
             Username = username;
             Password = password;
-            Database = database;
             Schema = schema;
 
             IsCorrect = ChangeProvider(provider);
@@ -69,8 +66,7 @@ namespace Filaments.CommonLibrary
             var d = configDictionary;
             return await Change(d["host"], d["port"],
                 d["username"], d["password"],
-                d["database"], d["schema"],
-                d["provider"]
+                d["schema"], d["provider"]
             );
         }
 
@@ -121,7 +117,6 @@ namespace Filaments.CommonLibrary
                 $"password={Password}",
                 $"host={Host}",
                 $"port={Port}",
-                $"database={Database}",
                 $"schema={Schema}"
             };
 

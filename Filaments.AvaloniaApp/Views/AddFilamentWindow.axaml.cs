@@ -43,8 +43,6 @@ public partial class AddFilamentWindow : Window
 
     private async void HandleAdd(object? sender, RoutedEventArgs e)
     {
-        //_ = (ColorPicker.Color);
-
         if (!ValidateFields())
         {
             var box = MessageBoxManager.GetMessageBoxStandard(

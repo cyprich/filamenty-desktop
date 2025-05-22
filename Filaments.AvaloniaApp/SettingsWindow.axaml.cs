@@ -18,6 +18,8 @@ public partial class SettingsWindow : Window
 {
     private readonly IDatabaseProvider[] _providers = [new PostgresDatabaseProvider(), new SqliteDatabaseProvider()];
 
+    private bool _isClosing = false;
+
     private bool AbleToClose { get; set; }
 
     public SettingsWindow()
@@ -287,10 +289,19 @@ public partial class SettingsWindow : Window
         }
     }
 
-    private async void Window_OnClosing(object? sender, WindowClosingEventArgs e)
+    private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
-        // TODO remember me
-        e.Cancel = !(await ValidateParametersMessageBox());
+        // TODO remember settings?
+
+        if (_isClosing)
+        {
+            return;
+
+        }
+
+        _isClosing = true;
+        e.Cancel = true;
+        HandleExit(sender, null);
     }
 
 }

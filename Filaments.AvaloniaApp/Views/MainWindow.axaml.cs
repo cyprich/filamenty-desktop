@@ -67,12 +67,23 @@ namespace Filaments.AvaloniaApp.Views
             }
         }
 
+        private void HandleExit(object? sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
         private async Task UpdateUi()
         {
             if (DataContext is MainWindowViewModel vm)
             {
                 await vm.LoadFilaments();
             }
+        }
+
+        private void HandleAbout(object? sender, RoutedEventArgs e)
+        {
+            var window = new AboutWindow();
+            window.Show(this);
         }
     }
 }

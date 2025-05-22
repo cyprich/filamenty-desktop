@@ -19,10 +19,7 @@
 	<DockPanel>
         <Menu DockPanel.Dock="Top">
 			<MenuItem Header="_File">
-				<MenuItem Header="_Open"/>
-				<MenuItem Header="_Save"/>
-				<Separator/>
-				<MenuItem Header="_Exit"/>
+				<MenuItem Header="_Exit" Click="HandleExit"/>
             </MenuItem>
 			<MenuItem Header="_Edit">
 				<MenuItem Header="_Add Filament" Click="HandleAdd"/>
@@ -30,7 +27,7 @@
             </MenuItem>
 			<MenuItem Header="_Settings" Click="HandleSettingsWindow"/>
 			<MenuItem Header="_Help">
-				<MenuItem Header="_About"/>
+				<MenuItem Header="_About" Click="HandleAbout"/>
             </MenuItem>
         </Menu>
 

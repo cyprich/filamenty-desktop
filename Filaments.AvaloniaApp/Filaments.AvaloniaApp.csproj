@@ -14,16 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove=".env" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include=".env">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.0" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.0" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.0" />
@@ -45,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\PostgresDefaultsWindow.axaml.cs">
+    <Compile Update="PostgresDefaultsWindow.axaml.cs">
       <DependentUpon>PostgresDefaultsWindow.axaml</DependentUpon>
     </Compile>
   </ItemGroup>

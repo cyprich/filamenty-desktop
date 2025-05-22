@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="250"
+        x:Class="Filaments.AvaloniaApp.AboutWindow"
+        Width="400"
+        Height="250"
+        Title="About">
+	<Grid RowDefinitions="Auto Auto Auto * Auto" Margin="16">
+        <StackPanel Grid.Row="0" Margin="0 0 0 20">
+			<TextBlock Text="Filaments" FontSize="24" FontWeight="Bold"/>
+			<TextBlock Text="v1.0" FontWeight="Light"  VerticalAlignment="Bottom"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="0 0 0 20">
+			<TextBlock Grid.Row="1" Text="Cross-platform app for managing 3D printing filaments"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Margin="0 0 0 20">
+			<TextBlock Text="C# &amp; .NET 9.0"/>
+			<TextBlock Text="Avalonia UI v11.3.0"/>
+			<TextBlock Text="PostgreSQL, Sqlite"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4">
+			<TextBlock Text="Copyright (c) 2025 Peter Cyprich" FontWeight="Medium"/>
+        </StackPanel>
+    </Grid>
+</Window>

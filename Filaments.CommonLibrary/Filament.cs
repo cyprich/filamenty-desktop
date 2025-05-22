@@ -62,6 +62,10 @@ namespace Filaments.CommonLibrary
             get => _colorHex;
             set
             {
+                if (value.Length == 9)
+                {
+                    value = value[0] + value[3..];
+                }
                 _colorHex = value;
                 OnPropertyChanged(nameof(ColorHex));
             }
@@ -84,6 +88,10 @@ namespace Filaments.CommonLibrary
             get => _color2Hex;
             set
             {
+                if (value?.Length == 9)
+                {
+                    value = value[0] + value[3..];
+                }
                 _color2Hex = value;
                 OnPropertyChanged(nameof(Color2Hex));
             }
@@ -181,10 +189,45 @@ namespace Filaments.CommonLibrary
         }
 
         public string TempSecondValue => TempMax != null ? $" - {TempMax}" : "";
+
         public string TempBedSecondValue => TempBedMax != null ? $" - {TempBedMax}" : "";
-        public int WeightLeft => Math.Max(MeasuredWeight - SpoolWeight, 0);
-        public string PriceFormatted => $"{Price:F2}";
-        public string CentsPerGram => $"{(Price / OriginalWeight * 100):F2}";
+
+        public int WeightLeft
+        {
+            get => Math.Max(MeasuredWeight - SpoolWeight, 0);
+            set
+            {
+                MeasuredWeight = value + SpoolWeight;
+                OnPropertyChanged(nameof(WeightLeft));
+                OnPropertyChanged(nameof(MeasuredWeight));
+            }
+        }
+
+        //public string PriceFormatted => $"{Price:F2}";
+        public string PriceFormatted
+        {
+            get => $"{Price:F2}";
+            set
+            {
+                Price = double.TryParse(value, out var parsed) ? Price = parsed : Price = 0;
+                OnPropertyChanged(nameof(PriceFormatted));
+                OnPropertyChanged(nameof(Price));
+            }
+        }
+
+        public string CentsPerGram
+        {
+            get => $"{(Price / OriginalWeight * 100):F2}";
+            set
+            {
+                if (double.TryParse(value, out var parsed))
+                {
+                    Price = (parsed / 100) * OriginalWeight;
+                    OnPropertyChanged(nameof(CentsPerGram));
+                    OnPropertyChanged(nameof(Price));
+                }
+            }
+        }
 
 
         public Filament(int id, string vendor, string material, double price, string colorHex, string colorName, string? color2Hex, string? color2Name, int tempMin, int? tempMax, int tempBedMin, int? tempBedMax, int measuredWeight, int spoolWeight, int originalWeight)

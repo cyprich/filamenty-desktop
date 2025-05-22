@@ -35,12 +35,6 @@ namespace Filaments.AvaloniaApp.Views
             await UpdateUi();
         }
 
-        private async void HandleEdit(object? sender, RoutedEventArgs e)
-        {
-            // TODO
-            _ = 0;
-        }
-
         private async void HandleDelete(object? sender, RoutedEventArgs e)
         {
             var selectedItems = MainDataGrid.SelectedItems;
@@ -62,5 +56,13 @@ namespace Filaments.AvaloniaApp.Views
             }
         }
 
+        private async void HandleEdit(object? sender, DataGridRowEditEndedEventArgs e)
+        {
+            if (e.Row.DataContext is Filament filament && Configuration.Provider != null)
+            {
+                await Configuration.Provider.EditFilament(filament);
+                await UpdateUi();
+            }
+        }
     }
 }

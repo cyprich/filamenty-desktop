@@ -26,8 +26,7 @@
             </MenuItem>
 			<MenuItem Header="_Edit">
 				<MenuItem Header="_Add Filament" Click="HandleAdd"/>
-				<MenuItem Header="_Edit Filament"/>
-				<MenuItem Header="_Delete Filament"/>
+				<MenuItem Header="_Delete Filament" Click="HandleDelete"/>
             </MenuItem>
 			<MenuItem Header="_Settings" Click="HandleSettingsWindow"/>
 			<MenuItem Header="_Help">
@@ -42,7 +41,8 @@
 				AutoGenerateColumns="False"
 				GridLinesVisibility="All"
                 x:Name="MainDataGrid" 
-                RowHeight="40">
+                RowHeight="40"
+                RowEditEnded="HandleEdit">
 				<DataGrid.Columns>
 					<!-- id, vendor, material --> 
 					<DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
@@ -194,7 +194,7 @@
                         </DataGridTemplateColumn.CellEditingTemplate>
 					</DataGridTemplateColumn>
 
-					<!-- bed --> 
+					<!-- bed temperature --> 
 					<DataGridTemplateColumn Header="Bed Temperature [C]" SortMemberPath="TempBedMin">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
@@ -228,7 +228,6 @@
 					<TextBlock Text="{Binding FilamentCount}"/>
                 </StackPanel>
 				<Button Content="Add" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0 0 0 8" Click="HandleAdd" x:Name="AddButton"/>
-				<Button Content="Edit" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0 0 0 8" Click="HandleEdit" x:Name="EditButton"/>
 				<Button Content="Delete" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0 0 0 8" Click="HandleDelete" x:Name="DeleteButton"/>
             </StackPanel>
 		</Grid>

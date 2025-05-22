@@ -73,7 +73,7 @@
 			</Grid>
 
 			<StackPanel Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-				<Button Content="Exit" Margin="0 0 8 0" Click="HandleExit"/>
+				<Button Content="Confirm" Margin="0 0 8 0" Click="HandleExit"/>
 			</StackPanel>
 		</Grid>
 	</DockPanel>

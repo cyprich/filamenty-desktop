@@ -1,28 +1,23 @@
 ﻿using Filaments.CommonLibrary;
 
-Configuration.Change(new FileInfo(".env"));
-var filaments = await DatabaseManager.GetFilaments();
+Configuration.Change("pokus.sqlite");
+Console.WriteLine($"Configuration is {(Configuration.IsCorrect ? "correct" : "incorrect")}");
 
-//foreach (var f in filaments)
-//{
-//    Console.WriteLine(f);
-//}
+await Configuration.Provider!.PrepareDatabase();
 
-filaments[0].Vendor = "Bambu Lab";
 
-if (Configuration.Provider != null)
+var x = await Configuration.Provider!.GetFilaments();
+
+if (x.Length > 0)
 {
-    await Configuration.Provider.EditFilament(filaments[0]);
-    Filament f = new Filament(50, "nikto", "PLA", 19.99, "#123123", "Gray", null, null, 200, 230, 50, 60, 1000, 200,
-        1000);
-
-    await Configuration.Provider.AddFilament(f);
-}
-else
-{
-    Console.WriteLine("Provider is not set");
+    var selected = x[0];
+    selected.Vendor = "haleluja";
+    await Configuration.Provider.EditFilament(selected);
 }
 
 
-
+foreach (var f in x)
+{
+    Console.WriteLine(f);
+}
 

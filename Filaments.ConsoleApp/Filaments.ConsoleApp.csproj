@@ -9,15 +9,20 @@
 
   <ItemGroup>
     <None Remove=".env" />
+    <None Remove="pokus.sqlite" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include=".env">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="pokus.sqlite">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.5" />
     <PackageReference Include="Npgsql" Version="9.0.3" />
   </ItemGroup>
 

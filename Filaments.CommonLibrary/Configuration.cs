@@ -14,63 +14,87 @@ namespace Filaments.CommonLibrary
         public static string Username { get; set; } = "";
         public static string Password { get; set; } = "";
         public static string Schema { get; set; } = "";
+        public static string FilePath { get; set; } = "";
         public static IDatabaseProvider? Provider { get; set; }
-        public static string[] Fields => ["host", "port", "username", "password", "provider", "schema"];
+        public static string[] PostgresFields => ["host", "port", "username", "password", "provider", "schema"];
 
         public static bool IsCorrect { get; private set; }
 
-        public static async Task<bool> Change(string host, string port, string username, string password, string schema, IDatabaseProvider provider)
+        // for PostgreSQL
+        public static bool Change(string host, string port, string username, string password, string schema)
         {
             Host = host;
             Port = port;
             Username = username;
             Password = password;
             Schema = schema;
-            Provider = provider;
+            Provider = new PostgresDatabaseProvider();
 
-            await Provider.PrepareDatabase();
-
-            IsCorrect = true;
             return IsCorrect;
         }
 
-        public static async Task<bool> Change(string host, string port, string username, string password, string schema, string provider)
+        // for Sqlite
+
+        public static bool Change(string sqliteFilePath)
         {
-            Host = host;
-            Port = port;
-            Username = username;
-            Password = password;
-            Schema = schema;
-
-            IsCorrect = ChangeProvider(provider);
-
-            if (Provider != null)
+            if (!File.Exists(sqliteFilePath))
             {
-                await Provider.PrepareDatabase();
+                IsCorrect = false;
+            }
+            else
+            {
+                FilePath = sqliteFilePath;
+                Provider = new SqliteDatabaseProvider();
+                IsCorrect = true;
+            }
+            return IsCorrect;
+        }
+
+        public static bool Change(Dictionary<string, string> configDictionary)
+        {
+            if (!configDictionary.TryGetValue("provider", out var provider))
+            {
+                IsCorrect = false;
+                return IsCorrect;
             }
 
-            return IsCorrect;
-        }
 
-        public static async Task <bool> Change(Dictionary<string, string> configDictionary)
-        {
-            foreach (var f in Fields)
+            switch (provider.ToLower())
             {
-                if (!configDictionary.ContainsKey(f))
-                {
+                case "postgre":
+                case "postgres":
+                case "postgresql":
+                    foreach (var f in PostgresFields)
+                    {
+                        if (!configDictionary.ContainsKey(f))
+                        {
+                            IsCorrect = false;
+                            return IsCorrect;
+                        }
+                    }
+                    var d = configDictionary;
+                    return Change(d["host"], d["port"],
+                        d["username"], d["password"],
+                        d["schema"]);
+
+                case "sqlite":
+                    if (!configDictionary.TryGetValue("file", out var filename) || !File.Exists(filename))
+                    {
+                        IsCorrect = false;
+                        return IsCorrect;
+                    }
+
+                    FilePath = filename;
+                    IsCorrect = true;
+                    return IsCorrect;
+
+                default:
                     IsCorrect = false;
                     return IsCorrect;
-                }
             }
-
-            var d = configDictionary;
-            return await Change(d["host"], d["port"],
-                d["username"], d["password"],
-                d["schema"], d["provider"]
-            );
         }
 
-        public static async Task<bool> Change(FileInfo file)
+        public static async Task<bool> Load(FileInfo file)
         {
             if (!File.Exists(file.FullName))
             {
@@ -80,7 +104,7 @@ namespace Filaments.CommonLibrary
 
             try
             {
-                return await Change((await File.ReadAllLinesAsync(file.FullName))
+                return Change((await File.ReadAllLinesAsync(file.FullName))
                     .Select(line => line.Split("="))
                     .ToDictionary(part => part[0], part => part[1]));
             }
@@ -91,24 +115,7 @@ namespace Filaments.CommonLibrary
                 return IsCorrect;
             }
         }
-        public static bool ChangeProvider(string provider)
-        {
-            switch (provider.ToLower())
-            {
-                case "postgre":
-                case "postgres":
-                case "postgresql":
-                    Provider = new PostgresDatabaseProvider();
-                    return true;
-                case "sqlite":
-                    Provider = new SqliteDatabaseProvider();
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool Save(FileInfo file)
+        public static async Task<bool> Save(FileInfo file)
         {
             var lines = new List<string>
             {
@@ -122,7 +129,7 @@ namespace Filaments.CommonLibrary
 
             try
             {
-                File.WriteAllLines(file.FullName, lines);
+                await File.WriteAllLinesAsync(file.FullName, lines);
             }
             catch (Exception e)
             {

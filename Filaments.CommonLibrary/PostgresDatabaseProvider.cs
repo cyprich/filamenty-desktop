@@ -41,7 +41,11 @@ namespace Filaments.CommonLibrary
 
             while (await reader.ReadAsync())
             {
-                result.Add(GetFilamentFromReader(reader));
+                var filament = GetFilamentFromReader(reader);
+                if (filament != null)
+                {
+                    result.Add(filament);
+                }
             }
 
             return result.ToArray();
@@ -137,55 +141,56 @@ namespace Filaments.CommonLibrary
 
         public Task<bool> TestConnection()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(false); // TODO
         }
 
-        // NOTE - Begin of AI-generated code
-        public Filament GetFilamentFromReader(object? reader)
+        public Filament? GetFilamentFromReader<T>(T reader)
         {
             if (reader is not NpgsqlDataReader npgsqlReader)
             {
-                throw new ArgumentException("Expected NpgsqlDataReader");
+                return null;
             }
 
-            return GetFilamentFromReader(npgsqlReader);
-        }
-        // NOTE - End of AI-generated code
-
-        private static Filament GetFilamentFromReader(NpgsqlDataReader reader)
-        {
             // columns that can be null
-            string? color2Hex = reader.IsDBNull(reader.GetOrdinal("color2_hex"))
+            var o = npgsqlReader.GetOrdinal("color2_hex");
+            var color2Hex = npgsqlReader.IsDBNull(o)
                 ? null
-                : reader.GetString(reader.GetOrdinal("color2_hex"));
-            string? color2Name = reader.IsDBNull(reader.GetOrdinal("color2_name"))
+                : npgsqlReader.GetString(o);
+            
+            o = npgsqlReader.GetOrdinal("color2_name");
+            var color2Name = npgsqlReader.IsDBNull(o)
                 ? null
-                : reader.GetString(reader.GetOrdinal("color2_name"));
-            int? tempMax = reader.IsDBNull(reader.GetOrdinal("temp_max"))
+                : npgsqlReader.GetString(o);
+            
+            o = npgsqlReader.GetOrdinal("temp_max");
+            int? tempMax = npgsqlReader.IsDBNull(o)
                 ? null
-                : reader.GetInt32(reader.GetOrdinal("temp_max"));
-            int? tempBedMax = reader.IsDBNull(reader.GetOrdinal("temp_bed_max"))
+                : npgsqlReader.GetInt32(o);
+            
+            o = npgsqlReader.GetOrdinal("temp_bed_max");
+            int? tempBedMax = npgsqlReader.IsDBNull(o)
                 ? null
-                : reader.GetInt32(reader.GetOrdinal("temp_bed_max"));
+                : npgsqlReader.GetInt32(o);
 
 
             return new Filament(
-                reader.GetInt32(reader.GetOrdinal("id")),
-                reader.GetString(reader.GetOrdinal("vendor")),
-                reader.GetString(reader.GetOrdinal("material")),
-                reader.GetFloat(reader.GetOrdinal("price")),
-                reader.GetString(reader.GetOrdinal("color_hex")),
-                reader.GetString(reader.GetOrdinal("color_name")),
+                npgsqlReader.GetInt32(npgsqlReader.GetOrdinal("id")),
+                npgsqlReader.GetString(npgsqlReader.GetOrdinal("vendor")),
+                npgsqlReader.GetString(npgsqlReader.GetOrdinal("material")),
+                npgsqlReader.GetFloat(npgsqlReader.GetOrdinal("price")),
+                npgsqlReader.GetString(npgsqlReader.GetOrdinal("color_hex")),
+                npgsqlReader.GetString(npgsqlReader.GetOrdinal("color_name")),
                 color2Hex,
                 color2Name,
-                reader.GetInt32(reader.GetOrdinal("temp_min")),
+                npgsqlReader.GetInt32(npgsqlReader.GetOrdinal("temp_min")),
                 tempMax,
-                reader.GetInt32(reader.GetOrdinal("temp_bed_min")),
+                npgsqlReader.GetInt32(npgsqlReader.GetOrdinal("temp_bed_min")),
                 tempBedMax,
-                reader.GetInt32(reader.GetOrdinal("measured_weight")),
-                reader.GetInt32(reader.GetOrdinal("spool_weight")),
-                reader.GetInt32(reader.GetOrdinal("original_weight"))
+                npgsqlReader.GetInt32(npgsqlReader.GetOrdinal("measured_weight")),
+                npgsqlReader.GetInt32(npgsqlReader.GetOrdinal("spool_weight")),
+                npgsqlReader.GetInt32(npgsqlReader.GetOrdinal("original_weight"))
             );
+
         }
 
         public async Task PrepareDatabase()
@@ -195,7 +200,7 @@ namespace Filaments.CommonLibrary
             await HandleMissingTable();
         }
 
-        public async Task HandleMissingSchema()
+        private async Task HandleMissingSchema()
         {
             var conn = await GetConnection();
             await using var cmd = new NpgsqlCommand(
@@ -203,7 +208,7 @@ namespace Filaments.CommonLibrary
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task HandleMissingTable()
+        private async Task HandleMissingTable()
         {
             try
             {

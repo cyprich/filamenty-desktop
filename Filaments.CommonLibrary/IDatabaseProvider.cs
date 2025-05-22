@@ -18,15 +18,10 @@ namespace Filaments.CommonLibrary
 
         public Task DeleteFilament(Filament filament);
 
-        public Task<bool> TestConnection();
+        public Task<bool> TestConnection(); // TODO
 
-        public Filament GetFilamentFromReader(object? reader);
-
+        public Filament? GetFilamentFromReader<T>(T reader);
 
         public Task PrepareDatabase();
-
-        public Task HandleMissingSchema();
-
-        public Task HandleMissingTable();
     }
 }

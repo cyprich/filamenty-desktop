@@ -16,7 +16,7 @@ namespace Filaments.CommonLibrary
         public static string Schema { get; set; } = "";
         public static string FilePath { get; set; } = "";
         public static IDatabaseProvider? Provider { get; set; }
-        public static string[] PostgresFields => ["host", "port", "username", "password", "provider", "schema"];
+        public static string[] PostgresFields => ["host", "port", "username", "password", "schema"];
 
         public static bool IsCorrect { get; private set; }
 
@@ -30,11 +30,11 @@ namespace Filaments.CommonLibrary
             Schema = schema;
             Provider = new PostgresDatabaseProvider();
 
+            IsCorrect = true;
             return IsCorrect;
         }
 
         // for Sqlite
-
         public static bool Change(string sqliteFilePath)
         {
             if (!File.Exists(sqliteFilePath))

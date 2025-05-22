@@ -195,7 +195,7 @@ namespace Filaments.CommonLibrary
 
         public async Task PrepareDatabase()
         {
-            Console.WriteLine($"Preparing Database... ConnString: {ConnString}");
+            //Console.WriteLine($"Preparing Database... ConnString: {ConnString}");
             await HandleMissingSchema();
             await HandleMissingTable();
         }

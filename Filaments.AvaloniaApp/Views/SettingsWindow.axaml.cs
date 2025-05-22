@@ -48,6 +48,9 @@ public partial class SettingsWindow : Window
         PostgresAddress.Text = Configuration.Host;
         PostgresPort.Text = Configuration.Port;
         PostgresSchema.Text = Configuration.Schema;
+
+        SqliteTextBox.Text = Configuration.FilePath;
+
         DatabaseComboBox.SelectedItem = Configuration.Provider?.Name;
         DatabaseComboBox_OnSelectionChanged(null, null);
     }
@@ -66,11 +69,10 @@ public partial class SettingsWindow : Window
                     PostgresPort.Text!,
                     PostgresUsername.Text!,
                     PostgresPassword.Text!,
-                    PostgresSchema.Text!,
-                    new PostgresDatabaseProvider()
+                    PostgresSchema.Text!
                 );
 
-                if (!(await result))
+                if (!result)
                 {
                     var box = MessageBoxManager.GetMessageBoxStandard("Error",
                         "Failed to save configuration" +
@@ -98,24 +100,26 @@ public partial class SettingsWindow : Window
 
     private bool ValidateParameters()
     {
+        bool result;
         switch (DatabaseComboBox.SelectedItem?.ToString()?.ToLower())
         {
             case "postgresql":
-                if (string.IsNullOrEmpty(PostgresUsername.Text) ||
+                result = !(string.IsNullOrEmpty(PostgresUsername.Text) ||
                     string.IsNullOrEmpty(PostgresPassword.Text) ||
                     string.IsNullOrEmpty(PostgresAddress.Text) ||
                     string.IsNullOrEmpty(PostgresPort.Text) ||
-                    string.IsNullOrEmpty(PostgresSchema.Text))
-                {
-                    return false;
-                }
-                return true;
+                    string.IsNullOrEmpty(PostgresSchema.Text));
+                break;
 
             case "sqlite":
-                return false;
+                result = File.Exists(SqliteTextBox.Text);
+                break;
             default:
                 return false;
         }
+
+        Configuration.Provider?.PrepareDatabase();
+        return result;
     }
 
     private async Task<bool> ValidateParametersMessageBox()
@@ -169,7 +173,7 @@ public partial class SettingsWindow : Window
             if (files.Count >= 1)
             {
                 var path = files[0].Path.LocalPath;
-                var result = Configuration.Change(new FileInfo(path));
+                var result = Configuration.Load(new FileInfo(path));
                 if (!await result)
                 {
                     var box = MessageBoxManager.GetMessageBoxStandard("Error",
@@ -186,13 +190,14 @@ public partial class SettingsWindow : Window
             }
         }
     }
+
     private async void HandleSave(object? sender, RoutedEventArgs e)
     {
-        var toplevel = TryGetTopLevel();
+        var topLevel = TryGetTopLevel();
 
-        if (toplevel != null)
+        if (topLevel != null)
         {
-            var file = await toplevel.StorageProvider.SaveFilePickerAsync(
+            var file = await topLevel.StorageProvider.SaveFilePickerAsync(
                 new FilePickerSaveOptions
                 {
                     DefaultExtension = ".env",
@@ -205,7 +210,7 @@ public partial class SettingsWindow : Window
             {
                 var path = file.Path.LocalPath;
                 var result = Configuration.Save(new FileInfo(path));
-                if (result)
+                if (await result)
                 {
                     var box = MessageBoxManager.GetMessageBoxStandard(
                         "Success", 
@@ -229,15 +234,63 @@ public partial class SettingsWindow : Window
         }
     }
 
+    private void HandlePostgresDefaultsWindow(object? sender, RoutedEventArgs e)
+    {
+        var window = new PostgresDefaultsWindow();
+        window.ShowDialog(this);
+    }
+
+    private async void HandleSqliteFileSelect(object? sender, RoutedEventArgs e)
+    {
+        var topLevel = TryGetTopLevel();
+
+        if (topLevel == null)
+        {
+            return;
+        }
+
+        var dbFileFilter = new FilePickerFileType("Sqlite database file") { Patterns = ["*.sqlite", "*.db"] };
+        var file = await topLevel.StorageProvider.SaveFilePickerAsync(
+            new FilePickerSaveOptions()
+            {
+                Title = "Open or Create Sqlite file",
+                ShowOverwritePrompt = false,
+                FileTypeChoices = [dbFileFilter, FilePickerFileTypes.All]
+            }
+        );
+
+        if (file != null)
+        {
+            var path = file.Path.LocalPath;
+
+            // NOTE - begin of AI-generated code
+            if (!File.Exists(path))
+            {
+                await using (File.Create(path)) { }  // creates a file if it doesn't exit
+            }
+            // NOTE - end of AI-generated code
+
+            var result = Configuration.Change(path);
+            if (!result)
+            {
+                var box = MessageBoxManager.GetMessageBoxStandard(
+                    "Error", 
+                    "Couldn't open file", 
+                    ButtonEnum.Ok,
+                    MsBox.Avalonia.Enums.Icon.Error);
+                _ = box.ShowAsync();
+            }
+            else
+            {
+                UpdateUi();
+            }
+        }
+    }
+
     private async void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
         // TODO remember me
         e.Cancel = !(await ValidateParametersMessageBox());
     }
 
-    private void HandlePostgresDefaultsWindow(object? sender, RoutedEventArgs e)
-    {
-        var window = new PostgresDefaultsWindow();
-        window.ShowDialog(this);
-    }
 }

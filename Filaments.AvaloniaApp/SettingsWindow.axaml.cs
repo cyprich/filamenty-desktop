@@ -174,6 +174,11 @@ public partial class SettingsWindow : Window
             );
             if (files.Count >= 1)
             {
+                var x = MessageBoxManager.GetMessageBoxStandard("a",
+                    $"{files[0].Path.AbsolutePath}\n{files[0].Path.LocalPath}");
+                _ = x.ShowAsync();
+
+                //var path = files[0].Path.
                 var path = files[0].Path.LocalPath;
                 var result = Configuration.Load(new FileInfo(path));
                 if (!await result)
